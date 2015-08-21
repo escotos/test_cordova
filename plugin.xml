@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="ibm-mfp-core" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>ibm-mfp-core</name>
+    
+	<js-module name="MFPClient" src="www/MFPClient.js">
+        <clobbers target="MFPClient" />
+    </js-module>
+
+    <js-module name="MFPResourceRequest" src="www/MFPResourceRequest.js">
+        <clobbers target="MFPResourceRequest" />
+    </js-module>
+</plugin>

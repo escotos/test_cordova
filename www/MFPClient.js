@@ -14,10 +14,14 @@
 var exec = require("cordova/exec");
 
 var MFPClient = function() {
-	this.initialize = function(backendRoute, backendGuid) {};
-	this.registerAuthenticationListener = function(realm, authenticationListener) {};
-	this.registerAuthenticationListener = function(authenticationListener) {};
-	this.version = function() { return "0.1"; };
+	//Return null
+    this.initialize = function(backendRoute, backendGuid) {};
+	//Return null
+    this.registerAuthenticationListener = function(realm, authenticationListener) {};
+    //Return null
+	this.unregisterAuthenticationListener = function(authenticationListener) {};
+    //Return string
+	this.version = function() { return "0.0.1"; };
 };
 
 module.exports = new MFPClient();

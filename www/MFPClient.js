@@ -10,18 +10,23 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-
 var exec = require("cordova/exec");
 
+//Singleton
 var MFPClient = function() {
-	//Return null
-    this.initialize = function(backendRoute, backendGuid) {};
-	//Return null
-    this.registerAuthenticationListener = function(realm, authenticationListener) {};
-    //Return null
-	this.unregisterAuthenticationListener = function(authenticationListener) {};
-    //Return string
-	this.version = function() { return "0.0.1"; };
+    this.initialize = function(backendRoute, backendGuid) {
+        cordova.exec();
+    }; //Return null
+    this.registerAuthenticationListener = function(realm, authenticationListener) {
+        cordova.exec();
+    }; //Return null
+	this.unregisterAuthenticationListener = function(authenticationListener) {
+        cordova.exec();
+    }; //Return null
+	this.version = function() {
+        cordova.exec();
+    }; //Return string
 };
 
+//Return the same instance
 module.exports = new MFPClient();

@@ -28,15 +28,19 @@ exports.defineAutoTests = function () {
 			});
 		});
 
+		describe('MFPClient behavior', function() {
+			it('MFPClient', function() {
+				MFPClient.initialize("", "");
+				MFPClient
+			});
+		});
 
 		describe('MFPResourceRequest method definitions', function() {
 			it('MFPResourceRequest should exist', function() {
 				expect(MFPResourceRequest).toBeDefined();
 			});
 
-			it('MFPResourceRequest', function() {
-				
-			});
+			xit('MFPResourceRequest', function() {});
 		});
 
 	});

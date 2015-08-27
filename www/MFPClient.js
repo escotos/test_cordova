@@ -14,19 +14,63 @@ var exec = require("cordova/exec");
 
 //Singleton
 var MFPClient = function() {
+
+    var _version = "0.0.1";
+    /**
+     * Initializes a connection
+     * @param {string} backendRoute
+     * @param {string} backendGuid
+     */
     this.initialize = function(backendRoute, backendGuid) {
-        cordova.exec();
-    }; //Return null
+        var success = function(msg) {
+            console.log("success: " + msg);
+        };
+        var failure = function(msg) {
+            console.log("failure: " + msg);
+        };
+
+        cordova.exec(success, failure, "IbmMfpCore", "initialize", [backendRoute, backendGuid]);
+    };
+
+    /**
+     * Registers callbacks
+     * @param {string} realm
+     * @param {function} authenticationListener
+     */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        cordova.exec();
-    }; //Return null
+        var success = function(msg) {
+            console.log("success: " + msg);
+        };
+        var failure = function(msg) {
+            console.log("failure: " + msg);
+        };
+
+        cordova.exec(success, failure, "IbmMfpCore", "registerAuthenticationListener" [realm, authenticationListener]);
+    };
+
+    /**
+     * Unregisters callbacks
+     * @param {function} authenticationListener
+     */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        cordova.exec();
-    }; //Return null
+        var success = function(msg) {
+            console.log("success: " + msg);
+        };
+        var failure = function(msg) {
+            console.log("failure: " + msg);
+        };
+
+        cordova.exec(success, failure, "IbmMfpCore", "unregisterAuthenticationListener" [authenticationListener]);
+    };
+
+    /**
+     * Prints out the plugin's version
+     * @returns {string}
+     */
 	this.version = function() {
-        cordova.exec();
-    }; //Return string
+        return _version;
+    };
 };
 
-//Return the same instance
+//Return singleton instance
 module.exports = new MFPClient();

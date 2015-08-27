@@ -1,12 +1,26 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="ibm-mfp-core" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="ibm-mfp-core" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
     <name>ibm-mfp-core</name>
-    
-	<js-module name="MFPClient" src="www/MFPClient.js">
-        <clobbers target="MFPClient" />
+    <js-module name="MFPClient" src="www/MFPClient.js">
+        <clobbers target="MFPClient"/>
+    </js-module>
+    <js-module name="MFPResourceRequest" src="www/MFPResourceRequest.js">
+        <clobbers target="MFPResourceRequest"/>
     </js-module>
 
-    <js-module name="MFPResourceRequest" src="www/MFPResourceRequest.js">
-        <clobbers target="MFPResourceRequest" />
-    </js-module>
+    <platform name="android">
+        <framework src="src/android/bms_android" custom="true" />
+        <!--<framework src="src/android/build-extras.gradle" custom="true" type="gradleReference" />-->
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="IbmMfpCore">
+                <param name="android-package" value="ibm.mfp.core.IbmMfpCore"/>
+            </feature>
+        </config-file>
+
+        <config-file parent="/*" target="AndroidManifest.xml"/>
+        <source-file src="src/android/IbmMfpCore.java" target-dir="src/ibm_mfp_core/ibm_mfp_core" />
+    </platform>
+
 </plugin>

@@ -26,9 +26,6 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 
-/**
- * This class echoes a string called from JavaScript.
- */
 public class IbmMfpCore extends CordovaPlugin {
     private final String TAG = "IbmMfpCore";
 

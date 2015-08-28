@@ -16,50 +16,40 @@ var exec = require("cordova/exec");
 var MFPClient = function() {
 
     var _version = "0.0.1";
+
+    var success = function(msg) {
+        console.log("success: " + msg)
+    };
+
+    var failure = function(msg) {
+      console.log("Error: " + msg)
+    };
     /**
-     * Initializes a connection
+     * Sets the base URL for the authorization server.
+     * <p>
+     * This method should be called before you send the first request that requires authorization.
+     * </p>
      * @param {string} backendRoute
      * @param {string} backendGuid
      */
     this.initialize = function(backendRoute, backendGuid) {
-        var success = function(msg) {
-            console.log("success: " + msg);
-        };
-        var failure = function(msg) {
-            console.log("failure: " + msg);
-        };
-
         cordova.exec(success, failure, "IbmMfpCore", "initialize", [backendRoute, backendGuid]);
     };
 
     /**
-     * Registers callbacks
+     * Registers authentication callback
      * @param {string} realm
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        var success = function(msg) {
-            console.log("success: " + msg);
-        };
-        var failure = function(msg) {
-            console.log("failure: " + msg);
-        };
-
         cordova.exec(success, failure, "IbmMfpCore", "registerAuthenticationListener" [realm, authenticationListener]);
     };
 
     /**
-     * Unregisters callbacks
+     * Unregisters the authentication callback
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        var success = function(msg) {
-            console.log("success: " + msg);
-        };
-        var failure = function(msg) {
-            console.log("failure: " + msg);
-        };
-
         cordova.exec(success, failure, "IbmMfpCore", "unregisterAuthenticationListener" [authenticationListener]);
     };
 

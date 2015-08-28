@@ -1,11 +1,10 @@
-//repositories {
-//  maven {
-//      url 'http://visustar.francelab.fr.ibm.com:8081/nexus/content/repositories/mobile-all'
-//  }
-//}
-//
-//dependencies {
-//    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
-//               name: 'bms-core',
-//               version: '0.1-SNAPSHOT'
-//}
+repositories {
+    maven {
+        url 'http://visustar.francelab.fr.ibm.com:8081/nexus/content/repositories/mobile-all'
+    }
+}
+dependencies {
+    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
+        name: 'bms-core',
+        version: '0.1-SNAPSHOT'
+}

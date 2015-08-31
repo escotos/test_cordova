@@ -17,13 +17,9 @@ var MFPClient = function() {
 
     var _version = "0.0.1";
 
-    var success = function(msg) {
-        console.log("success: " + msg)
-    };
+    var success = function(msg) { console.log("MFPClient success: " + msg) };
 
-    var failure = function(msg) {
-      console.log("Error: " + msg)
-    };
+    var failure = function(msg) { console.log("MFPClient Error: " + msg) };
     /**
      * Sets the base URL for the authorization server.
      * <p>
@@ -33,7 +29,7 @@ var MFPClient = function() {
      * @param {string} backendGuid
      */
     this.initialize = function(backendRoute, backendGuid) {
-        cordova.exec(success, failure, "IbmMfpCore", "initialize", [backendRoute, backendGuid]);
+        cordova.exec(success, failure, "MFPCore", "initialize", [backendRoute, backendGuid]);
     };
 
     /**
@@ -42,7 +38,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        cordova.exec(success, failure, "IbmMfpCore", "registerAuthenticationListener" [realm, authenticationListener]);
+        cordova.exec(success, failure, "MFPCore", "registerAuthenticationListener" [realm, authenticationListener]);
     };
 
     /**
@@ -50,11 +46,11 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        cordova.exec(success, failure, "IbmMfpCore", "unregisterAuthenticationListener" [authenticationListener]);
+        cordova.exec(success, failure, "MFPCore", "unregisterAuthenticationListener" [authenticationListener]);
     };
 
     /**
-     * Prints out the plugin's version
+     * Prints out the plugin version
      * @returns {string}
      */
 	this.version = function() {

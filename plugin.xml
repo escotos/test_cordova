@@ -22,4 +22,34 @@
         <source-file src="src/android/IbmMfpCore.java" target-dir="src/ibm_mfp_core/ibm_mfp_core" />
     </platform>
 
+    <!-- ios -->
+    <platform name="ios">
+
+        <config-file parent="/*" target="config.xml">
+
+            <feature name="MFPCore">
+                <param name="ios-package" value="MFPCore"/>
+            </feature>
+
+            <feature name="MFPCore">
+                <param name="ios-package" value="MFPClient"/>
+            </feature>
+
+            <feature name="MFPCore">
+                <param name="ios-package" value="MFPResourceRequest"/>
+            </feature>
+
+        </config-file>
+
+        <header-file src="src/ios/MFPCore.h" />
+        <source-file src="src/ios/MFPCore.m"/>
+
+        <header-file src="src/ios/MFPClient.h" />
+        <source-file src="src/ios/MFPClient.m" />
+
+        <header-file src="src/ios/MFPResourceRequest.h" />
+        <source-file src="src/ios/MFPResourceRequest.m" />
+
+    </platform>
+
 </plugin>

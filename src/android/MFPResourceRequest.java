@@ -38,9 +38,17 @@ public class MFPResourceRequest {
         }
     }
 
-    public static void setHeader(JSONArray args, CallbackContext callbackContext) {
+    public static void setHeader(JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, "setHeader");
+        String name = args.getString(0);
+        String value = args.getString(0);
+        if (name != null && name.length() > 0) {
+            callbackContext.success(name);
+        } else {
+            callbackContext.error("Invalid arguments");
+        }
     }
+
 
     public static void removeHeaders(JSONArray args, CallbackContext callbackContext) {
         Log.d(TAG, "removeHeaders");
@@ -51,6 +59,10 @@ public class MFPResourceRequest {
     }
 
     public static void getHeader(JSONArray args, CallbackContext callbackContext) {
+        Log.d(TAG, "getHeader");
+    }
+
+    public static void getHeaders(JSONArray args, CallbackContext callbackContext) {
         Log.d(TAG, "getHeader");
     }
 
@@ -70,9 +82,11 @@ public class MFPResourceRequest {
 
     public static void getTimeout(JSONArray args, CallbackContext callbackContext) {}
 
-    public static void getQueryParemeters(JSONArray args, CallbackContext callbackContext) {}
+    public static void getQueryParameters(JSONArray args, CallbackContext callbackContext) {}
 
-    public static void setQueryParemeters(JSONArray args, CallbackContext callbackContext) {}
+    public static void setQueryParameter(JSONArray args, CallbackContext callbackContext) {}
+
+    public static void setQueryParameters(JSONArray args, CallbackContext callbackContext) {}
 
     public static void send(JSONArray args, CallbackContext callbackContext) {}
 

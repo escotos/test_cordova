@@ -25,7 +25,6 @@ public class MFPCore extends CordovaPlugin {
             switch(currentAction) {
 
                 /* MFPClient */
-
                 case initialize:
                     Log.d(TAG, " calling initialize()");
                     MFPClient.initialize(args, callbackContext);
@@ -40,7 +39,6 @@ public class MFPCore extends CordovaPlugin {
                     return true;
 
                 /* MFPResourceRequest */
-
                 case addHeader:
                     Log.d(TAG, " calling addHeader()");
                     MFPResourceRequest.addHeader(args, callbackContext);

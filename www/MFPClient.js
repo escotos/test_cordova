@@ -29,7 +29,7 @@ var MFPClient = function() {
      * @param {string} backendGuid
      */
     this.initialize = function(backendRoute, backendGuid) {
-        cordova.exec(success, failure, "MFPCore", "initialize", [backendRoute, backendGuid]);
+        cordova.exec(success, failure, "MFPClient", "initialize", [backendRoute, backendGuid]);
     };
 
     /**
@@ -38,7 +38,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        cordova.exec(success, failure, "MFPCore", "registerAuthenticationListener" [realm, authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "registerAuthenticationListener" [realm, authenticationListener]);
     };
 
     /**
@@ -46,7 +46,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        cordova.exec(success, failure, "MFPCore", "unregisterAuthenticationListener" [authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener" [authenticationListener]);
     };
 
     /**

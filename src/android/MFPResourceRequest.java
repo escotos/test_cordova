@@ -24,8 +24,15 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 
-public class MFPResourceRequest {
+public class MFPResourceRequest extends CordovaPlugin {
     private static final String TAG = "NATIVE-MFPResourceRequest";
+
+    @Override
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        Log.d(TAG, "In execute()");
+//         Method[] list = this.getClass().getMethods();
+        return true;
+    }
 
     public static void addHeader(JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, "addHeader");

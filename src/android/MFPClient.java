@@ -24,8 +24,18 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 
-public class MFPClient {
+public class MFPClient extends CordovaPlugin {
     private static final String TAG = "NATIVE-MFPClient";
+
+    @Override
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        Log.d(TAG, "In execute()");
+        String backendRoute = args.getString(0);
+        String backendGuid = args.getString(1);
+        Log.d(TAG, "Arg1: " + backendRoute);
+        Log.d(TAG, "Arg2: " + backendGuid);
+        return true;
+    }
 
     public static void initialize(JSONArray args, CallbackContext callbackContext) throws JSONException {
         String backendRoute = args.getString(0);

@@ -18,7 +18,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.addHeader = function(name,value) {
 		console.log(this.TAG + " addHeader()");
-		cordova.exec(success, failure, "MFPCore", "addHeader", [name, value]);
+		cordova.exec(success, failure, "MFPResourceRequest", "addHeader", [name, value]);
 	};
 
 	/**
@@ -28,7 +28,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.setHeader = function(name,value) {
 		console.log(this.TAG + " setHeader()");
-		cordova.exec(success, failure, "MFPCore", "setHeader", [name, value]);
+		cordova.exec(success, failure, "MFPResourceRequest", "setHeader", [name, value]);
 	};
 
 	/**
@@ -37,7 +37,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.removeHeaders = function(name) {
 		console.log(this.TAG + " removeHeaders()");
-		cordova.exec(success, failure, "MFPCore", "setHeader", [name]);
+		cordova.exec(success, failure, "MFPResourceRequest", "setHeader", [name]);
 	};
 
 	/**
@@ -46,7 +46,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getHeaderNames = function() {
 		console.log(this.TAG + " getHeaderNames()");
-		cordova.exec(success, failure, "MFPCore", "getHeaderNames", []);
+		cordova.exec(success, failure, "MFPResourceRequest", "getHeaderNames", []);
 		return [];
 	};
 
@@ -57,7 +57,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getHeader = function(name) {
 		console.log(this.TAG + " getHeader()");
-		cordova.exec(success, failure, "MFPCore", "getHeader", [name]);
+		cordova.exec(success, failure, "MFPResourceRequest", "getHeader", [name]);
 	};
 
 	/**
@@ -67,7 +67,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getHeaders = function(name) {
 		console.log(this.TAG + " getHeaders()");
-		cordova.exec(success, failure, "MFPCore", "getHeaders", [name]);
+		cordova.exec(success, failure, "MFPResourceRequest", "getHeaders", [name]);
 		return [null];
 	};
 	/**
@@ -76,7 +76,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getAllHeaders = function() {
 		console.log(this.TAG + " getAllHead()");
-		cordova.exec(success, failure, "MFPCore", "getAllHeaders", [name]);
+		cordova.exec(success, failure, "MFPResourceRequest", "getAllHeaders", [name]);
 	};
 
 	/**
@@ -85,7 +85,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getUrl = function() {
 		console.log(this.TAG + " getUrl()");
-		cordova.exec(success, failure, "MFPCore", "getUrl", []);
+		cordova.exec(success, failure, "MFPResourceRequest", "getUrl", []);
 	};
 
 	/**
@@ -94,7 +94,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getMethod = function() {
 		console.log(this.TAG + " getMethod()");
-		cordova.exec(success, failure, "MFPCore", "getMethod", []);
+		cordova.exec(success, failure, "MFPResourceRequest", "getMethod", []);
 	};
 
 	/**
@@ -103,7 +103,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.setTimeout = function(timeout) {
 		console.log(this.TAG + " setTimeout()");
-		cordova.exec(success, failure, "MFPCore", "setTimeout", [timeout]);
+		cordova.exec(success, failure, "MFPResourceRequest", "setTimeout", [timeout]);
 	};
 
 	/**
@@ -112,7 +112,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getTimeout = function() {
 		console.log(this.TAG + " getTimeout()");
-		cordova.exec(success, failure, "MFPCore", "getTimeout", []);
+		cordova.exec(success, failure, "MFPResourceRequest", "getTimeout", []);
 	};
 
 	/**
@@ -121,7 +121,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.getQueryParameters = function() {
 		console.log(this.TAG + " getQueryParameters()");
-		cordova.exec(success, failure, "MFPCore", "getQueryParameters", []);
+		cordova.exec(success, failure, "MFPResourceRequest", "getQueryParameters", []);
 	};
 
 	/**
@@ -131,7 +131,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.setQueryParameter = function(name, value) {
 		console.log("log: setQueryParameter(name, value)");
-		cordova.exec(success, failure, "MFPCore", "setQueryParameters", [name, value]);
+		cordova.exec(success, failure, "MFPResourceRequest", "setQueryParameters", [name, value]);
 	}
 
 	/**
@@ -140,7 +140,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.setQueryParameters = function(json_object) {
 		console.log("log: setQueryParameters(jsonObj)");
-		cordova.exec(success, failure, "MFPCore", "setQueryParameters", [json_object]);
+		cordova.exec(success, failure, "MFPResourceRequest", "setQueryParameters", [json_object]);
 	};
 
 	/**
@@ -152,15 +152,15 @@ var MFPResourceRequest = function(url, method) {
 		if (typeof arg === "undefined") {
 			// send :: Promise
 			console.log("send : no arguments");
-			cordova.exec(success, failure, "MFPCore", "send", []);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", []);
 		} else if (typeof arg === "string") {
 			// send :: String -> Promise
 			console.log("send : string");
-			cordova.exec(success, failure, "MFPCore", "send", [arg]);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [arg]);
 		} else if (typeof arg === "object") {
 			// send :: Object -> Promise
 			console.log("send : object");
-			cordova.exec(success, failure, "MFPCore", "send", [arg]);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [arg]);
 		}
 	};
 
@@ -170,7 +170,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.sendFormParameters = function(jsonObj) {
 		console.log(this.TAG + " sendFormParameters()");
-		cordova.exec(success, failure, "MFPCore", "sendFormParameters", [jsonObj]);
+		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [jsonObj]);
 	};
 
 	var MFPResponse = function(url, method) {

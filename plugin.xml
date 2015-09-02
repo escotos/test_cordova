@@ -15,6 +15,10 @@
         <!-- Include Android BMS SDK -->
         <framework src="src/android/build-extras.gradle" custom="true" type="gradleReference" />
 
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="MFPClient">
                 <param name="android-package" value="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.MFPClient"/>

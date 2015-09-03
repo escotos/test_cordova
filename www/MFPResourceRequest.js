@@ -19,28 +19,31 @@ var MFPResourceRequest = function(_url, _method) {
 	 */
 	this.addHeader = function(name, value) {
 		console.log(this.TAG + "addHeader()");
-		this.headers[name] = value;
+		if( !(name in this.headers) ) {
+			this.headers[name] = new Array();
+		}
+		this.headers[name].push(value);
 	};
 
 	/**
-	 *	Modify an existing header value only if name already exists
+	 *	Modify an existing header name
 	 * @param name
 	 * @param value
 	 */
 	this.setHeader = function(name, value) {
 		console.log(this.TAG + "setHeader()");
-		if (name in this.headers) {
-			this.headers[name] = value;
-		}
+		this.headers[name] = new Array();
+		this.headers[name].push(value);
 	};
 
 	/**
 	 * Remove all values associated with this name from the header
 	 * @param name
 	 */
+	//TODO: Do we clear the values only, or do we delete the key as well?
 	this.removeHeaders = function(name) {
 		console.log(this.TAG + "removeHeaders()");
-		delete this.headers[name];
+		this.headers[name] = new Array();
 	};
 
 	/**
@@ -51,7 +54,7 @@ var MFPResourceRequest = function(_url, _method) {
 		console.log(this.TAG + "getHeaderNames()");
 		var keys = [];
 		for (var key in this.headers) {
-			if (dictionary.hasOwnProperty(key)) {
+			if (this.headers.hasOwnProperty(key)) {
 				keys.push(key);
 			}
 		}
@@ -65,19 +68,17 @@ var MFPResourceRequest = function(_url, _method) {
 	 */
 	this.getHeader = function(name) {
 		console.log(this.TAG + "getHeader()");
-		// TODO: Should header[name] return a list? then should we return the [0]th object?
-		return this.header[name];
+		return this.headers[name][0];
 	};
 
 	/**
-	 *
+	 * Return a list of the value or all the values associated with the given header name
 	 * @param name
 	 * @returns {null, string}
 	 */
 	this.getHeaders = function(name) {
 		console.log(this.TAG + "getHeaders()");
-		//TODO: Confirm getHeader() is correct, then confirm this method is correct as well.
-		return this.header[name];
+		return this.headers[name];
 	};
 	/**
 	 * Returns the entire header dictionary object

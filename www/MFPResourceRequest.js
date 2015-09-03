@@ -29,7 +29,7 @@ var MFPResourceRequest = function(_url, _method) {
 	 */
 	this.setHeader = function(name, value) {
 		console.log(this.TAG + "setHeader()");
-		if ( !(name in this.headers) ) {
+		if (name in this.headers) {
 			this.headers[name] = value;
 		}
 	};

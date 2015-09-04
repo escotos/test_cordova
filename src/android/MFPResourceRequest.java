@@ -24,6 +24,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //         Method[] list = this.getClass().getMethods();
 public class MFPResourceRequest extends CordovaPlugin {
@@ -40,66 +44,65 @@ public class MFPResourceRequest extends CordovaPlugin {
         return false;
     }
 
-    public static void addHeader(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, "addHeader");
-        String name = args.getString(0);
-        String value = args.getString(1);
-        if (name != null && name.length() > 0) {
-            callbackContext.success(name);
-        } else {
-            callbackContext.error("Invalid arguments");
+
+    private MFPRequest unpackRequest(JSONObject javascriptRequest) {
+        String url = javascriptRequest.getString("url");
+        String method = javascriptRequest.getString("method");
+        MFPRequest fullRequest = new MFPRequest(url, method);
+
+        Map<String, Object> mapHeaders = jsonToMap(javascriptRequest.getJSONObject("headers"));
+        fullRequest.setHeaders(mapHeaders);
+
+        for(String header : fullRequest.getHeaders())
+            Log.d(TAG, "Header: " + header);
+
+
+        return fullRequest;
+    }
+    private Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
+        Map<String, Object> retMap = new HashMap<String, Object>();
+
+        if(json != JSONObject.NULL) {
+            retMap = toMap(json);
         }
+        return retMap;
     }
 
-    public static void setHeader(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, "setHeader");
-        String name = args.getString(0);
-        String value = args.getString(0);
-        if (name != null && name.length() > 0) {
-            callbackContext.success(name);
-        } else {
-            callbackContext.error("Invalid arguments");
+    private Map<String, T> toMap(JSONObject object) throws JSONException {
+        Map<String, T> map = new HashMap<String, T>();
+
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            T value = object.get(key);
+
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
         }
+        return map;
     }
 
+    private List<T> toList(JSONArray array) throws JSONException {
+        List<T> list = new ArrayList<T>();
+        for(int i = 0; i < array.length(); i++) {
+            T value = array.get(i);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
 
-    public static void removeHeaders(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "removeHeaders");
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
     }
-
-    public static void getHeaderNames(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getHeaderNames");
-    }
-
-    public static void getHeader(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getHeader");
-    }
-
-    public static void getHeaders(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getHeader");
-    }
-
-    public static void getAllHeaders(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getAllHeaders");
-    }
-
-    public static void getUrl(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getUrl");
-    }
-
-    public static void getMethod(JSONArray args, CallbackContext callbackContext) {
-        Log.d(TAG, "getMethod");
-    }
-
-    public static void setTimeout(JSONArray args, CallbackContext callbackContext) {}
-
-    public static void getTimeout(JSONArray args, CallbackContext callbackContext) {}
-
-    public static void getQueryParameters(JSONArray args, CallbackContext callbackContext) {}
-
-    public static void setQueryParameter(JSONArray args, CallbackContext callbackContext) {}
-
-    public static void setQueryParameters(JSONArray args, CallbackContext callbackContext) {}
 
     public void send(JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, "In send()");
@@ -111,7 +114,8 @@ public class MFPResourceRequest extends CordovaPlugin {
         Log.d(TAG, "The passed url : " + url);
 
         try {
-            final MFPRequest req = new MFPRequest(url, method);
+//             final MFPRequest req = new MFPRequest(url, method);
+            final MFPRequest req = unpackRequest(myrequest);
 
             Log.d(TAG, "Testing the request");
             Log.d(TAG, " req.getUrl: " + req.getUrl());
@@ -137,6 +141,9 @@ public class MFPResourceRequest extends CordovaPlugin {
 
         } catch (MalformedURLException e) { e.printStackTrace(); }
     }
-    public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) {}
+    public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) {
+        JSONObject myrequest = args.getJSONObject(0);
+
+    }
 
 }

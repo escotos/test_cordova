@@ -163,15 +163,11 @@ var MFPResourceRequest = function(url, method) {
 		if (typeof arg === "undefined") {
 			// No input
 			console.log(this.TAG + "send : no arguments");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest()]);
-		} else if (typeof arg === "string") {
-			// Input: String (body)
-			console.log(this.TAG + "send : string");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest(arg)]);
-		} else if (typeof arg === "object") {
-			// Input: (JSONObject)
-			console.log(this.TAG + "send : object");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest(arg)]);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildTheRequest()]);
+		} else if (typeof arg === "string" || typeof arg === "object") {
+			// Input = String or JSON
+			console.log(this.TAG + "send : string or object");
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildTheRequest(body)]);
 		}
 	};
 
@@ -179,20 +175,23 @@ var MFPResourceRequest = function(url, method) {
 	 *
 	 * @param jsonObj
 	 */
-		//TODO: Implement
 	this.sendFormParameters = function(jsonObj) {
 		console.log(this.TAG + "sendFormParameters()");
+		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [this.buildTheRequest(jsonObj)]);
 	};
 
-	this.buildTheRequest = function(arg) {
+	this.buildTheRequest = function(body) {
 		var req = {};
+
 		req.url 			= this.getUrl();
 		req.method 			= this.getMethod();
 		req.headers 		= this.getAllHeaders();
 		req.timeout 		= this.getTimeout();
 		req.queryparameters = this.getQueryParameters();
 
-		console.log(this.TAG + " this.getMethod: " + this.getMethod() + " this._method: " + this._method);
+		if (typeof body === "string" || typeof body === "object") {
+			req.body = body;
+		}
 		console.log(this.TAG + " The request is: " + JSON.stringify(req));
 		return req;
 	};

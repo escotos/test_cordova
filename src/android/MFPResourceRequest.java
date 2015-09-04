@@ -12,6 +12,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.core.api.ResponseListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthenticationContext;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthenticationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthorizationManager;
+import com.ibm.mobilefirstplatform.clientsdk.android.logger.api.Logger;
 
 import android.util.Log;
 import android.app.Activity;
@@ -24,14 +25,19 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 
+//         Method[] list = this.getClass().getMethods();
 public class MFPResourceRequest extends CordovaPlugin {
     private static final String TAG = "NATIVE-MFPResourceRequest";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, "In execute()");
-//         Method[] list = this.getClass().getMethods();
-        return true;
+
+        if("send".equals(action)) {
+            this.send(args, callbackContext);
+            return true;
+        }
+        return false;
     }
 
     public static void addHeader(JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -95,8 +101,42 @@ public class MFPResourceRequest extends CordovaPlugin {
 
     public static void setQueryParameters(JSONArray args, CallbackContext callbackContext) {}
 
-    public static void send(JSONArray args, CallbackContext callbackContext) {}
+    public void send(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        Log.d(TAG, "In send()");
+        JSONObject myrequest = args.getJSONObject(0);
 
+        String url = myrequest.getString("url");
+        String method = myrequest.getString("method");
+        Log.d(TAG, "The passed dictionary: " + myrequest);
+        Log.d(TAG, "The passed url : " + url);
+
+        try {
+            final MFPRequest req = new MFPRequest(url, method);
+
+            Log.d(TAG, "Testing the request");
+            Log.d(TAG, " req.getUrl: " + req.getUrl());
+            Log.d(TAG, " req.getMethod: " + req.getMethod());
+
+            req.addHeader("SEHeaderName1", "SEHeaderValue1");
+            req.setQueryParameter("SEQP1", "SEQP1value");
+
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    req.send("SE Hello", new ResponseListener() {
+                        @Override
+                        public void onSuccess(Response response) {
+                            Log.d(TAG, "Success: " + response.getResponseText());
+                        }
+                        @Override
+                        public void onFailure(FailResponse failResponse, Throwable throwable) {
+                            Log.d(TAG, "Failure: " + failResponse.getStatus());
+                        }
+                    });
+                }
+            });
+
+        } catch (MalformedURLException e) { e.printStackTrace(); }
+    }
     public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) {}
 
 }

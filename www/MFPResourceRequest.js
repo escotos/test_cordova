@@ -2,81 +2,91 @@ var exec = require("cordova/exec");
 
 var MFPResourceRequest = function(url, method) {
 	var success = function(msg) { console.log("MFPResourceRequest: success " + msg); };
-	var failure = function(msg) { console.log("MFPResourceRequest: failure " + msg) };
+	var failure = function(msg) { console.log("MFPResourceRequest: failure " + msg); };
 
-	this.GET = "GET";
-	this.PUT = "PUT";
-	this.POST = "POST";
-	this.DELETE = "DELETE";
+	this.TAG = "javascript-MFPRequest ";
 
-	this.TAG = "javascript-MFPRequest";
+	this._headers = {};
+	this._queryParameters = {};
+	this._url = url;
+	this._method = method;
+	this._timeout = 60000;
 
 	/**
-	 *
+	 * Add a new header ([key] => value pair) to this instance
 	 * @param name
 	 * @param value
 	 */
-	this.addHeader = function(name,value) {
-		console.log(this.TAG + " addHeader()");
-		cordova.exec(success, failure, "MFPResourceRequest", "addHeader", [name, value]);
+	this.addHeader = function(name, value) {
+		console.log(this.TAG + "addHeader()");
+		if( !(name in this._headers) ) {
+			this._headers[name] = [];
+		}
+		this._headers[name].push(value);
 	};
 
 	/**
-	 *
+	 *	Modify an existing header name
 	 * @param name
 	 * @param value
 	 */
-	this.setHeader = function(name,value) {
-		console.log(this.TAG + " setHeader()");
-		cordova.exec(success, failure, "MFPResourceRequest", "setHeader", [name, value]);
+	this.setHeader = function(name, value) {
+		console.log(this.TAG + "setHeader()");
+		this._headers[name] = [];
+		this._headers[name].push(value);
 	};
 
 	/**
-	 *
+	 * Remove all values associated with this name from the header
 	 * @param name
 	 */
 	this.removeHeaders = function(name) {
-		console.log(this.TAG + " removeHeaders()");
-		cordova.exec(success, failure, "MFPResourceRequest", "setHeader", [name]);
+		console.log(this.TAG + "removeHeaders()");
+		this._headers[name] = [];
+		delete this._headers[name];
 	};
 
 	/**
-	 *
+	 * Returns all the header names (i.e. a list of keys) associated with this instance
 	 * @returns {String}
 	 */
 	this.getHeaderNames = function() {
-		console.log(this.TAG + " getHeaderNames()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getHeaderNames", []);
-		return [];
+		console.log(this.TAG + "getHeaderNames()");
+		var keyNames = [];
+		for (var key in this._headers) {
+			if (this._headers.hasOwnProperty(key)) {
+				keyNames.push(key);
+			}
+		}
+		return keyNames;
 	};
 
 	/**
-	 *
+	 * Return the header value (or the first, if multiple values) associated with the header name
 	 * @param name
 	 * @returns {null, string}
 	 */
 	this.getHeader = function(name) {
-		console.log(this.TAG + " getHeader()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getHeader", [name]);
+		console.log(this.TAG + "getHeader()");
+		return this._headers[name][0];
 	};
 
 	/**
-	 *
+	 * Return a list of the value or all the values associated with the given header name
 	 * @param name
 	 * @returns {null, string}
 	 */
 	this.getHeaders = function(name) {
-		console.log(this.TAG + " getHeaders()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getHeaders", [name]);
-		return [null];
+		console.log(this.TAG + "getHeaders()");
+		return this._headers[name];
 	};
 	/**
-	 *
+	 * Returns the entire header dictionary object
 	 * @returns null, JSON
 	 */
 	this.getAllHeaders = function() {
-		console.log(this.TAG + " getAllHead()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getAllHeaders", [name]);
+		console.log(this.TAG + "getAllHeaders()");
+		return this._headers;
 	};
 
 	/**
@@ -84,8 +94,8 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {string}
 	 */
 	this.getUrl = function() {
-		console.log(this.TAG + " getUrl()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getUrl", []);
+		console.log(this.TAG + "getUrl()");
+		return this._url;
 	};
 
 	/**
@@ -93,17 +103,17 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {string}
 	 */
 	this.getMethod = function() {
-		console.log(this.TAG + " getMethod()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getMethod", []);
+		console.log(this.TAG + "getMethod()");
+		return this._method;
 	};
 
 	/**
 	 *
 	 * @param timeout
 	 */
-	this.setTimeout = function(timeout) {
-		console.log(this.TAG + " setTimeout()");
-		cordova.exec(success, failure, "MFPResourceRequest", "setTimeout", [timeout]);
+	this.setTimeout = function(_timeout) {
+		console.log(this.TAG + "setTimeout()");
+		this._timeout = _timeout;
 	};
 
 	/**
@@ -111,8 +121,8 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {number}
 	 */
 	this.getTimeout = function() {
-		console.log(this.TAG + " getTimeout()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getTimeout", []);
+		console.log(this.TAG + "getTimeout()");
+		return this._timeout;
 	};
 
 	/**
@@ -120,8 +130,8 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns JSON
 	 */
 	this.getQueryParameters = function() {
-		console.log(this.TAG + " getQueryParameters()");
-		cordova.exec(success, failure, "MFPResourceRequest", "getQueryParameters", []);
+		console.log(this.TAG + "getQueryParameters()");
+		return this._queryParameters;
 	};
 
 	/**
@@ -130,37 +140,38 @@ var MFPResourceRequest = function(url, method) {
 	 * @param value
 	 */
 	this.setQueryParameter = function(name, value) {
-		console.log("log: setQueryParameter(name, value)");
-		cordova.exec(success, failure, "MFPResourceRequest", "setQueryParameters", [name, value]);
-	}
+		console.log(this.TAG + "log: setQueryParameter(name, value)");
+		this._queryParameters["name"] = value;
+	};
 
 	/**
 	 *
 	 * @param json_object
 	 */
-	this.setQueryParameters = function(json_object) {
-		console.log("log: setQueryParameters(jsonObj)");
-		cordova.exec(success, failure, "MFPResourceRequest", "setQueryParameters", [json_object]);
+	this.setQueryParameters = function(jsonquery) {
+		console.log(this.TAG + "log: setQueryParameters(jsonObj)");
+		this._queryParameters = jsonquery;
 	};
 
 	/**
 	 *
 	 * @param arg
+	 * @returns Promise
 	 */
 	this.send = function(arg) {
-		console.log(this.TAG + " send()");
+		console.log(this.TAG + "send()");
 		if (typeof arg === "undefined") {
-			// send :: Promise
-			console.log("send : no arguments");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", []);
+			// No input
+			console.log(this.TAG + "send : no arguments");
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest()]);
 		} else if (typeof arg === "string") {
-			// send :: String -> Promise
-			console.log("send : string");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [arg]);
+			// Input: String (body)
+			console.log(this.TAG + "send : string");
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest(arg)]);
 		} else if (typeof arg === "object") {
-			// send :: Object -> Promise
-			console.log("send : object");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [arg]);
+			// Input: (JSONObject)
+			console.log(this.TAG + "send : object");
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [buildTheRequest(arg)]);
 		}
 	};
 
@@ -168,9 +179,22 @@ var MFPResourceRequest = function(url, method) {
 	 *
 	 * @param jsonObj
 	 */
+		//TODO: Implement
 	this.sendFormParameters = function(jsonObj) {
-		console.log(this.TAG + " sendFormParameters()");
-		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [jsonObj]);
+		console.log(this.TAG + "sendFormParameters()");
+	};
+
+	this.buildTheRequest = function(arg) {
+		var req = {};
+		req.url 			= this.getUrl();
+		req.method 			= this.getMethod();
+		req.headers 		= this.getAllHeaders();
+		req.timeout 		= this.getTimeout();
+		req.queryparameters = this.getQueryParameters();
+
+		console.log(this.TAG + " this.getMethod: " + this.getMethod() + " this._method: " + this._method);
+		console.log(this.TAG + " The request is: " + JSON.stringify(req));
+		return req;
 	};
 
 	var MFPResponse = function(url, method) {
@@ -184,7 +208,10 @@ var MFPResourceRequest = function(url, method) {
 		this.errorCode = function() {};
 		this.errorDescription = function() {};
 	};
-
 };
+MFPResourceRequest.GET = "GET";
+MFPResourceRequest.PUT = "PUT";
+MFPResourceRequest.POST = "POST";
+MFPResourceRequest.DELETE = "DELETE";
 
 module.exports = MFPResourceRequest;

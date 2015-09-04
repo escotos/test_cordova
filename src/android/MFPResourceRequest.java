@@ -45,64 +45,69 @@ public class MFPResourceRequest extends CordovaPlugin {
     }
 
 
-    private MFPRequest unpackRequest(JSONObject javascriptRequest) {
+    private void unpackRequest(JSONObject javascriptRequest) throws JSONException {
         String url = javascriptRequest.getString("url");
         String method = javascriptRequest.getString("method");
-        MFPRequest fullRequest = new MFPRequest(url, method);
 
-        Map<String, Object> mapHeaders = jsonToMap(javascriptRequest.getJSONObject("headers"));
-        fullRequest.setHeaders(mapHeaders);
+        Log.d(TAG, "unpackRequest=" + javascriptRequest.getJSONObject("headers").toString());
+//         try {
+//             MFPRequest fullRequest = new MFPRequest(url, method);
+//
+//         } catch (MalformedURLException e) { e.printStackTrace(); }
+//         Map<String, List<String>> mapHeaders = jsonToMap(javascriptRequest.getJSONObject("headers"));
+//         fullRequest.setHeaders(mapHeaders);
 
-        for(String header : fullRequest.getHeaders())
-            Log.d(TAG, "Header: " + header);
+//         for(String header : fullRequest.getHeaders())
+//             Log.d(TAG, "Header: " + header);
 
-
-        return fullRequest;
-    }
-    private Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
-        Map<String, Object> retMap = new HashMap<String, Object>();
-
-        if(json != JSONObject.NULL) {
-            retMap = toMap(json);
-        }
-        return retMap;
+//         return fullRequest;
     }
 
-    private Map<String, T> toMap(JSONObject object) throws JSONException {
-        Map<String, T> map = new HashMap<String, T>();
 
-        Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
-            String key = keysItr.next();
-            T value = object.get(key);
-
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            map.put(key, value);
-        }
-        return map;
-    }
-
-    private List<T> toList(JSONArray array) throws JSONException {
-        List<T> list = new ArrayList<T>();
-        for(int i = 0; i < array.length(); i++) {
-            T value = array.get(i);
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            list.add(value);
-        }
-        return list;
-    }
+//     private Map<String, T> jsonToMap(JSONObject json) throws JSONException {
+//         Map<String, T> retMap = new HashMap<String, T>();
+//
+//         if(json != JSONObject.NULL) {
+//             retMap = toMap(json);
+//         }
+//         return retMap;
+//     }
+//
+//     private Map<String, T> toMap(JSONObject object) throws JSONException {
+//         Map<String, T> map = new HashMap<String, T>();
+//
+//         Iterator<String> keysItr = object.keys();
+//         while(keysItr.hasNext()) {
+//             String key = keysItr.next();
+//             T value = object.get(key);
+//
+//             if(value instanceof JSONArray) {
+//                 value = toList((JSONArray) value);
+//             }
+//
+//             else if(value instanceof JSONObject) {
+//                 value = toMap((JSONObject) value);
+//             }
+//             map.put(key, value);
+//         }
+//         return map;
+//     }
+//
+//     private List<T> toList(JSONArray array) throws JSONException {
+//         List<T> list = new ArrayList<T>();
+//         for(int i = 0; i < array.length(); i++) {
+//             T value = array.get(i);
+//             if(value instanceof JSONArray) {
+//                 value = toList((JSONArray) value);
+//             }
+//
+//             else if(value instanceof JSONObject) {
+//                 value = toMap((JSONObject) value);
+//             }
+//             list.add(value);
+//         }
+//         return list;
+//     }
 
     public void send(JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(TAG, "In send()");
@@ -111,11 +116,11 @@ public class MFPResourceRequest extends CordovaPlugin {
         String url = myrequest.getString("url");
         String method = myrequest.getString("method");
         Log.d(TAG, "The passed dictionary: " + myrequest);
-        Log.d(TAG, "The passed url : " + url);
 
         try {
-//             final MFPRequest req = new MFPRequest(url, method);
-            final MFPRequest req = unpackRequest(myrequest);
+            unpackRequest(myrequest);
+            final MFPRequest req = new MFPRequest(url, method);
+//             final MFPRequest req = unpackRequest(myrequest);
 
             Log.d(TAG, "Testing the request");
             Log.d(TAG, " req.getUrl: " + req.getUrl());
@@ -141,7 +146,7 @@ public class MFPResourceRequest extends CordovaPlugin {
 
         } catch (MalformedURLException e) { e.printStackTrace(); }
     }
-    public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) {
+    public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) throws JSONException {
         JSONObject myrequest = args.getJSONObject(0);
 
     }

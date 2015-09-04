@@ -187,7 +187,7 @@ var MFPResourceRequest = function(url, method) {
 		req.method 			= this.getMethod();
 		req.headers 		= this.getAllHeaders();
 		req.timeout 		= this.getTimeout();
-		req.queryparameters = this.getQueryParameters();
+		req.queryParameters = this.getQueryParameters();
 
 		if (typeof body === "string" || typeof body === "object") {
 			req.body = body;

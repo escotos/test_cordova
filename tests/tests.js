@@ -29,7 +29,8 @@ exports.defineAutoTests = function () {
 		});
 
 		describe('MFPClient behavior', function() {
-			xit('should...', function() {
+			//TODO: Pending
+			xit('TODO: should...', function() {
 				MFPClient.initialize("", "");
 				//MFPClient
 			});
@@ -104,63 +105,76 @@ exports.defineAutoTests = function () {
 			});
 		});
 
-		describe('MFPResourceRequest\' behavior', function() {
+		describe('MFPResourceRequest behavior', function() {
 			var testRequest;
+			var DEFAULT_TIMEOUT = 60000;
+
 			beforeEach(function() {
 				testRequest = new MFPResourceRequest("http://www.google.com", MFPResourceRequest.GET);
 			});
 
 			it('should correctly instantiate a request with the appropriate properties', function() {
-				expect(testRequest._url).equals("http://www.google.com");
-				expect(testRequest._method).equals(MFPResourceRequest.GET);
+				expect(testRequest._url).toBe("http://www.google.com");
+				expect(testRequest._method).toBe(MFPResourceRequest.GET);
 			});
 
-			it('should add a header with addHeader', function() {});
+			xit('should add a header with addHeader', function() {});
 
-			it('should change headers with setHeader', function() {});
+			xit('should change headers with setHeader', function() {});
 
-			it('should remove headers with removeHeaders', function() {});
+			xit('should remove headers with removeHeaders', function() {});
 
-			it('should retrieve header value with getHeader', function() {});
+			xit('should retrieve header value with getHeader', function() {});
 
-			it('should retrieve a list of headers with getHeaderNames', function() {});
+			xit('should retrieve a list of headers with getHeaderNames', function() {});
 
-			it('should retrieve list of ALL headers with getAllHeaders', function() {});
+			xit('should retrieve list of ALL headers with getAllHeaders', function() {});
 
-			it('should retrieve the url with getUrl', function() {});
+			it('should retrieve the url with getUrl', function() {
+				expect(testRequest.getUrl()).toBe("http://www.google.com");
+			});
 
-			it('should retrieve the url with getMethod', function() {});
+			it('should retrieve the method with getMethod', function() {
+				expect(testRequest.getMethod()).toBe(MFPResourceRequest.GET);
+			});
 
-			it('should set the timeout with setTimeout', function() {});
+			it('should set the timeout with setTimeout', function() {
+				testRequest.setTimeout(45*1000);
+				expect(testRequest._timeout).toBe(45000);
+			});
 
 			it('should retrieve the timeout with getTimeout', function() {
+				expect(testRequest.getTimeout()).toBe(DEFAULT_TIMEOUT);
+			});
 
+			it('should set a query parameter with setQueryParameter', function() {
+				testRequest.setQueryParameter("singlequery", "singlevalue");
+				expect(testRequest.getQueryParameters()).toEqual({singlequery: "singlevalue"});
 			});
 
 			it('should set the query parameters with setQueryParameters', function() {
-
+				testRequest.setQueryParameters({"somequery": "somevalue", "anotherquery": "anothervalue"});
+				expect(testRequest._queryParameters).toEqual({"somequery": "somevalue", "anotherquery": "anothervalue"});
 			});
 
 			it('should retrieve the list of query parameters with getQueryParameters', function() {
-				expect(testRequest.getQueryParameters()).equals();
+				testRequest._queryParameters["somequery"] = "somevalue";
+				testRequest._queryParameters["anotherquery"] = "anothervalue";
+				expect(testRequest.getQueryParameters()).toEqual({"somequery": "somevalue", "anotherquery": "anothervalue"});
 			});
 
-			xit('should correctly send a request with send', function() {
+			xit('should correctly send a request with send', function() {});
 
-			});
-
-			xit('should correctly send a form request with sendFormParameters', function() {
-
-			});
+			xit('should correctly send a form request with sendFormParameters', function() {});
 
 			it('buildTheRequest - private method - should build and return an object correctly', function() {
 				var serializedRequest = testRequest.buildTheRequest();
 
-				expect(serializedRequest.url).equals(testRequest.getUrl());
-				expect(serializedRequest.method).equals(testRequest.getMethod());
-				expect(serializedRequest.headers).equals(testRequest.getAllHeaders());
-				expect(serializedRequest.timeout).equals(testRequest.getTimeout());
-				expect(serializedRequest.queryParameters).equals(testRequest.getQueryParameters());
+				expect(serializedRequest.url).toBe(testRequest.getUrl());
+				expect(serializedRequest.method).toBe(testRequest.getMethod());
+				expect(serializedRequest.headers).toBe(testRequest.getAllHeaders());
+				expect(serializedRequest.timeout).toBe(testRequest.getTimeout());
+				expect(serializedRequest.queryParameters).toBe(testRequest.getQueryParameters());
 			});
 		});
 

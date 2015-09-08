@@ -29,72 +29,85 @@ exports.defineAutoTests = function () {
 		});
 
 		describe('MFPClient behavior', function() {
-			it('MFPClient', function() {
+			xit('should...', function() {
 				MFPClient.initialize("", "");
 				//MFPClient
 			});
 		});
 
 		describe('MFPResourceRequest method definitions', function() {
+			var testRequest;
+
+			beforeEach(function () {
+				testRequest = new MFPResourceRequest("url_test", "guid_test");
+			});
+
 			it('MFPResourceRequest should exist', function() {
 				expect(MFPResourceRequest).toBeDefined();
 			});
 
 			it('MFPResourceRequest.addHeader() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.addHeader).toBeDefined();
-				expect(typeof MFPResourceRequest.addHeader == 'function').toBe(true);
+				expect(typeof testRequest.addHeader).toBeDefined();
+				expect(typeof testRequest.addHeader == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.setHeader() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.setHeader).toBeDefined();
-				expect(typeof MFPResourceRequest.setHeader == 'function').toBe(true);
+				expect(typeof testRequest.setHeader).toBeDefined();
+				expect(typeof testRequest.setHeader == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.removeHeaders() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.removeHeaders).toBeDefined();
-				expect(typeof MFPResourceRequest.removeHeaders == 'function').toBe(true);
+				expect(typeof testRequest.removeHeaders).toBeDefined();
+				expect(typeof testRequest.removeHeaders == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getHeaderNames() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getHeaderNames).toBeDefined();
-				expect(typeof MFPResourceRequest.getHeaderNames == 'function').toBe(true);
+				expect(typeof testRequest.getHeaderNames).toBeDefined();
+				expect(typeof testRequest.getHeaderNames == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getHeader() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getHeader).toBeDefined();
-				expect(typeof MFPResourceRequest.getHeader == 'function').toBe(true);
+				expect(typeof testRequest.getHeader).toBeDefined();
+				expect(typeof testRequest.getHeader == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getheaders() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getheaders).toBeDefined();
-				expect(typeof MFPResourceRequest.getheaders == 'function').toBe(true);
+				expect(typeof testRequest.getHeaders).toBeDefined();
+				expect(typeof testRequest.getHeaders == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getAllHeaders() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getAllHeaders).toBeDefined();
-				expect(typeof MFPResourceRequest.getAllHeaders == 'function').toBe(true);
+				expect(typeof testRequest.getAllHeaders).toBeDefined();
+				expect(typeof testRequest.getAllHeaders == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getUrl() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getUrl).toBeDefined();
-				expect(typeof MFPResourceRequest.getUrl == 'function').toBe(true);
+				expect(typeof testRequest.getUrl).toBeDefined();
+				expect(typeof testRequest.getUrl == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getMethod() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getMethod).toBeDefined();
-				expect(typeof MFPResourceRequest.getMethod == 'function').toBe(true);
+				expect(typeof testRequest.getMethod).toBeDefined();
+				expect(typeof testRequest.getMethod == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.setTimeout() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.setTimeout).toBeDefined();
-				expect(typeof MFPResourceRequest.setTimeout == 'function').toBe(true);
+				expect(typeof testRequest.setTimeout).toBeDefined();
+				expect(typeof testRequest.setTimeout == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getTimeout() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getTimeout).toBeDefined();
-				expect(typeof MFPResourceRequest.getTimeout == 'function').toBe(true);
+				expect(typeof testRequest.getTimeout).toBeDefined();
+				expect(typeof testRequest.getTimeout == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.getQueryParameters() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.getQueryParameters).toBeDefined();
-				expect(typeof MFPResourceRequest.getQueryParameters == 'function').toBe(true);
+				expect(typeof testRequest.getQueryParameters).toBeDefined();
+				expect(typeof testRequest.getQueryParameters == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.setQueryParameter() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.setQueryParameter).toBeDefined();
-				expect(typeof MFPResourceRequest.setQueryParameter == 'function').toBe(true);
+				expect(typeof testRequest.setQueryParameter).toBeDefined();
+				expect(typeof testRequest.setQueryParameter == 'function').toBe(true);
 			});
 			it('MFPResourceRequest.setQueryParameters() should exist and is a function', function() {
-				expect(typeof MFPResourceRequest.setQueryParameters).toBeDefined();
-				expect(typeof MFPResourceRequest.setQueryParameters == 'function').toBe(true);
+				expect(typeof testRequest.setQueryParameters).toBeDefined();
+				expect(typeof testRequest.setQueryParameters == 'function').toBe(true);
+			});
+		});
+
+		describe('MFPResourceRequest\' behavior', function() {
+			xit('should', function() {
+				MFPClient.initialize("", "");
+				//MFPClient
 			});
 		});
 

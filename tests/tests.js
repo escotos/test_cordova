@@ -105,9 +105,62 @@ exports.defineAutoTests = function () {
 		});
 
 		describe('MFPResourceRequest\' behavior', function() {
-			xit('should', function() {
-				MFPClient.initialize("", "");
-				//MFPClient
+			var testRequest;
+			beforeEach(function() {
+				testRequest = new MFPResourceRequest("http://www.google.com", MFPResourceRequest.GET);
+			});
+
+			it('should correctly instantiate a request with the appropriate properties', function() {
+				expect(testRequest._url).equals("http://www.google.com");
+				expect(testRequest._method).equals(MFPResourceRequest.GET);
+			});
+
+			it('should add a header with addHeader', function() {});
+
+			it('should change headers with setHeader', function() {});
+
+			it('should remove headers with removeHeaders', function() {});
+
+			it('should retrieve header value with getHeader', function() {});
+
+			it('should retrieve a list of headers with getHeaderNames', function() {});
+
+			it('should retrieve list of ALL headers with getAllHeaders', function() {});
+
+			it('should retrieve the url with getUrl', function() {});
+
+			it('should retrieve the url with getMethod', function() {});
+
+			it('should set the timeout with setTimeout', function() {});
+
+			it('should retrieve the timeout with getTimeout', function() {
+
+			});
+
+			it('should set the query parameters with setQueryParameters', function() {
+
+			});
+
+			it('should retrieve the list of query parameters with getQueryParameters', function() {
+				expect(testRequest.getQueryParameters()).equals();
+			});
+
+			xit('should correctly send a request with send', function() {
+
+			});
+
+			xit('should correctly send a form request with sendFormParameters', function() {
+
+			});
+
+			it('buildTheRequest - private method - should build and return an object correctly', function() {
+				var serializedRequest = testRequest.buildTheRequest();
+
+				expect(serializedRequest.url).equals(testRequest.getUrl());
+				expect(serializedRequest.method).equals(testRequest.getMethod());
+				expect(serializedRequest.headers).equals(testRequest.getAllHeaders());
+				expect(serializedRequest.timeout).equals(testRequest.getTimeout());
+				expect(serializedRequest.queryParameters).equals(testRequest.getQueryParameters());
 			});
 		});
 

@@ -205,8 +205,8 @@ exports.defineAutoTests = function () {
 
 			xit('should correctly send a form request with sendFormParameters', function() {});
 
-			it('buildTheRequest - private method - should build and return an object correctly', function() {
-				var serializedRequest = testRequest.buildTheRequest();
+			it('buildRequest - private method - should build and return an object correctly', function() {
+				var serializedRequest = testRequest.buildRequest();
 
 				expect(serializedRequest.url).toEqual(testRequest.getUrl());
 				expect(serializedRequest.method).toEqual(testRequest.getMethod());

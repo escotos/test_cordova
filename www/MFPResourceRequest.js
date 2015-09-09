@@ -1,9 +1,6 @@
 var exec = require("cordova/exec");
 
 var MFPResourceRequest = function(url, method) {
-	var success = function(msg) { console.log("MFPResourceRequest: success " + msg); };
-	var failure = function(msg) { console.log("MFPResourceRequest: failure " + msg); };
-
 	this.TAG = "javascript-MFPRequest ";
 
 	this._headers = {};
@@ -18,7 +15,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param value
 	 */
 	this.addHeader = function(name, value) {
-		console.log(this.TAG + "addHeader()");
+		//console.log(this.TAG + "addHeader()");
 		if( !(name in this._headers) ) {
 			this._headers[name] = [];
 		}
@@ -31,7 +28,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param value
 	 */
 	this.setHeader = function(name, value) {
-		console.log(this.TAG + "setHeader()");
+		//console.log(this.TAG + "setHeader()");
 		this._headers[name] = [];
 		this._headers[name].push(value);
 	};
@@ -41,7 +38,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param name
 	 */
 	this.removeHeaders = function(name) {
-		console.log(this.TAG + "removeHeaders()");
+		//console.log(this.TAG + "removeHeaders()");
 		this._headers[name] = [];
 		delete this._headers[name];
 	};
@@ -51,7 +48,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {String}
 	 */
 	this.getHeaderNames = function() {
-		console.log(this.TAG + "getHeaderNames()");
+		//console.log(this.TAG + "getHeaderNames()");
 		var keyNames = [];
 		for (var key in this._headers) {
 			if (this._headers.hasOwnProperty(key)) {
@@ -67,7 +64,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {null, string}
 	 */
 	this.getHeader = function(name) {
-		console.log(this.TAG + "getHeader()");
+		//console.log(this.TAG + "getHeader()");
 		return this._headers[name][0];
 	};
 
@@ -77,7 +74,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {null, string}
 	 */
 	this.getHeaders = function(name) {
-		console.log(this.TAG + "getHeaders()");
+		//console.log(this.TAG + "getHeaders()");
 		return this._headers[name];
 	};
 	/**
@@ -85,7 +82,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns null, JSON
 	 */
 	this.getAllHeaders = function() {
-		console.log(this.TAG + "getAllHeaders()");
+		//console.log(this.TAG + "getAllHeaders()");
 		return this._headers;
 	};
 
@@ -94,7 +91,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {string}
 	 */
 	this.getUrl = function() {
-		console.log(this.TAG + "getUrl()");
+		//console.log(this.TAG + "getUrl()");
 		return this._url;
 	};
 
@@ -103,7 +100,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {string}
 	 */
 	this.getMethod = function() {
-		console.log(this.TAG + "getMethod()");
+		//console.log(this.TAG + "getMethod()");
 		return this._method;
 	};
 
@@ -112,7 +109,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param timeout
 	 */
 	this.setTimeout = function(timeout) {
-		console.log(this.TAG + "setTimeout()");
+		//console.log(this.TAG + "setTimeout()");
 		this._timeout = timeout;
 	};
 
@@ -121,7 +118,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns {number}
 	 */
 	this.getTimeout = function() {
-		console.log(this.TAG + "getTimeout()");
+		//console.log(this.TAG + "getTimeout()");
 		return this._timeout;
 	};
 
@@ -130,7 +127,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @returns JSON
 	 */
 	this.getQueryParameters = function() {
-		console.log(this.TAG + "getQueryParameters()");
+		//console.log(this.TAG + "getQueryParameters()");
 		return this._queryParameters;
 	};
 
@@ -140,7 +137,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param value
 	 */
 	this.setQueryParameter = function(name, value) {
-		console.log(this.TAG + "log: setQueryParameter(name, value)");
+		//console.log(this.TAG + "log: setQueryParameter(name, value)");
 		this._queryParameters[name] = value;
 	};
 
@@ -149,7 +146,7 @@ var MFPResourceRequest = function(url, method) {
 	 * @param json_object
 	 */
 	this.setQueryParameters = function(jsonquery) {
-		console.log(this.TAG + "log: setQueryParameters(jsonObj)");
+		//console.log(this.TAG + "log: setQueryParameters(jsonObj)");
 		this._queryParameters = jsonquery;
 	};
 
@@ -158,10 +155,10 @@ var MFPResourceRequest = function(url, method) {
 	 * @param arg
 	 * @returns Promise
 	 */
-	this.send = function(arg) {
+	this.send = function(arg, success, failure) {
 		console.log(this.TAG + "send()");
-		if (typeof arg === "undefined") {
-			// No input
+		if (typeof arg === "function") {
+			// Empty argument
 			console.log(this.TAG + "send : no arguments");
 			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildRequest()]);
 		} else if (typeof arg === "string" || typeof arg === "object") {
@@ -175,7 +172,7 @@ var MFPResourceRequest = function(url, method) {
 	 *
 	 * @param jsonObj
 	 */
-	this.sendFormParameters = function(jsonObj) {
+	this.sendFormParameters = function(jsonObj, success, failure) {
 		console.log(this.TAG + "sendFormParameters()");
 		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [this.buildRequest(jsonObj)]);
 	};

@@ -14,8 +14,10 @@ var exec = require("cordova/exec");
 
 //Singleton
 var MFPClient = function() {
-
-    var _version = "0.0.1";
+    this._backendRoute = "";
+    this._backendGuid = "";
+    this._challengeHandlers = {};
+    this._version = "0.0.1";
 
     var success = function(msg) { console.log("MFPClient success: " + msg) };
 
@@ -25,16 +27,18 @@ var MFPClient = function() {
      * <p>
      * This method should be called before you send the first request that requires authorization.
      * </p>
-     * @param {string} backendRoute
-     * @param {string} backendGuid
+     * @param {string} backendRoute Specifies the base URL for the authorization server
+     * @param {string} backendGuid Specifies the GUID of the application
      */
     this.initialize = function(backendRoute, backendGuid) {
-        cordova.exec(success, failure, "MFPClient", "initialize", [backendRoute, backendGuid]);
+        this._backendRoute = backendRoute;
+        this._backendGuid = backendGuid;
+        //cordova.exec(success, failure, "MFPClient", "initialize", [backendRoute, backendGuid]);
     };
 
     /**
-     * Registers authentication callback
-     * @param {string} realm
+     * Registers authentication callback for the specified realm.
+     * @param {string} realm Authentication realm.
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
@@ -42,7 +46,7 @@ var MFPClient = function() {
     };
 
     /**
-     * Unregisters the authentication callback
+     * Unregisters the authentication callback for the specified realm.
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
@@ -54,7 +58,7 @@ var MFPClient = function() {
      * @returns {string}
      */
 	this.version = function() {
-        return _version;
+        return this._version;
     };
 };
 

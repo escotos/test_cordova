@@ -113,29 +113,67 @@ exports.defineAutoTests = function () {
 				testRequest = new MFPResourceRequest("http://www.google.com", MFPResourceRequest.GET);
 			});
 
-			it('should correctly instantiate a request with the appropriate properties', function() {
-				expect(testRequest._url).toBe("http://www.google.com");
-				expect(testRequest._method).toBe(MFPResourceRequest.GET);
+			it('should correctly create a new request with correct URL and Method', function() {
+				expect(testRequest._url).toEqual("http://www.google.com");
+				expect(testRequest._method).toEqual(MFPResourceRequest.GET);
 			});
 
-			xit('should add a header with addHeader', function() {});
+			it('should have a default timeout of ' + DEFAULT_TIMEOUT + ' milliseconds', function() {
+				expect(testRequest._timeout).toBe(DEFAULT_TIMEOUT);
+			});
 
-			xit('should change headers with setHeader', function() {});
+			it('should add a header with addHeader', function() {
+				testRequest.addHeader("someheader", "somevalue");
 
-			xit('should remove headers with removeHeaders', function() {});
+				expect(testRequest._headers["someheader"]).toBeDefined();
+				expect(testRequest._headers["someheader"]).toEqual(["somevalue"]);
+			});
 
-			xit('should retrieve header value with getHeader', function() {});
+			it('should change headers with setHeader', function() {
+				testRequest.setHeader("newheader", "newvalue");
 
-			xit('should retrieve a list of headers with getHeaderNames', function() {});
+				expect(testRequest._headers["newheader"]).toBeDefined();
+				expect(testRequest._headers["newheader"]).toEqual(["newvalue"]);
+			});
 
-			xit('should retrieve list of ALL headers with getAllHeaders', function() {});
+			it('should remove headers with removeHeaders', function() {
+				testRequest.addHeader("someheader", "somevalue1");
+				testRequest.addHeader("someheader", "somevalue2");
+
+				testRequest.removeHeaders("someheader");
+
+				expect(testRequest._headers["someheader"]).not.toBeDefined();
+				expect(testRequest._headers).toEqual({});
+			});
+
+			it('should retrieve a header value with getHeader', function() {
+				testRequest.addHeader("someheader", "testRetrieve");
+
+				expect(testRequest.getHeader("someheader")).toEqual("testRetrieve");
+			});
+
+			it('should retrieve a list of header names with getHeaderNames', function() {
+				testRequest.addHeader("someheader", "retrieve1");
+				testRequest.addHeader("anotherheader", "retrieve2");
+				testRequest.addHeader("newheader", "retrieve3");
+
+				expect(testRequest.getHeaderNames()).toEqual(["someheader", "anotherheader", "newheader"]);
+			});
+
+			it('should retrieve the header object with getAllHeaders', function() {
+				testRequest.addHeader("oneheader", "retrieve1");
+				testRequest.addHeader("twoheader", "retrieve2");
+				testRequest.addHeader("threeheader", "retrieve3");
+
+				expect(testRequest.getAllHeaders()).toEqual({"oneheader":["retrieve1"], "twoheader": ["retrieve2"], "threeheader": ["retrieve3"]});
+			});
 
 			it('should retrieve the url with getUrl', function() {
-				expect(testRequest.getUrl()).toBe("http://www.google.com");
+				expect(testRequest.getUrl()).toEqual("http://www.google.com");
 			});
 
 			it('should retrieve the method with getMethod', function() {
-				expect(testRequest.getMethod()).toBe(MFPResourceRequest.GET);
+				expect(testRequest.getMethod()).toEqual(MFPResourceRequest.GET);
 			});
 
 			it('should set the timeout with setTimeout', function() {
@@ -170,11 +208,11 @@ exports.defineAutoTests = function () {
 			it('buildTheRequest - private method - should build and return an object correctly', function() {
 				var serializedRequest = testRequest.buildTheRequest();
 
-				expect(serializedRequest.url).toBe(testRequest.getUrl());
-				expect(serializedRequest.method).toBe(testRequest.getMethod());
-				expect(serializedRequest.headers).toBe(testRequest.getAllHeaders());
-				expect(serializedRequest.timeout).toBe(testRequest.getTimeout());
-				expect(serializedRequest.queryParameters).toBe(testRequest.getQueryParameters());
+				expect(serializedRequest.url).toEqual(testRequest.getUrl());
+				expect(serializedRequest.method).toEqual(testRequest.getMethod());
+				expect(serializedRequest.headers).toEqual(testRequest.getAllHeaders());
+				expect(serializedRequest.timeout).toEqual(testRequest.getTimeout());
+				expect(serializedRequest.queryParameters).toEqual(testRequest.getQueryParameters());
 			});
 		});
 

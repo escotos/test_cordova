@@ -25,18 +25,17 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-//         Method[] list = this.getClass().getMethods();
 public class MFPResourceRequest extends CordovaPlugin {
     private static final String TAG = "NATIVE-MFPResourceRequest";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, "In execute()");
-
         if("send".equals(action)) {
             this.send(args, callbackContext);
             return true;
@@ -44,94 +43,58 @@ public class MFPResourceRequest extends CordovaPlugin {
         return false;
     }
 
+    private MFPRequest unpackRequest(JSONObject jsRequest) throws JSONException {
+        //Parse the request from Javascript
+        String url = jsRequest.getString("url");
+        String method = jsRequest.getString("method");
+        int timeout = jsRequest.getInt("timeout");
 
-    private void unpackRequest(JSONObject javascriptRequest) throws JSONException {
-        String url = javascriptRequest.getString("url");
-        String method = javascriptRequest.getString("method");
+        Map<String, List<String>> headers   = toNativeMap(jsRequest.getJSONObject("headers"));
+        Map<String, String> queryParameters = toNativeMap(jsRequest.getJSONObject("queryParameters"));
 
-        Log.d(TAG, "unpackRequest=" + javascriptRequest.getJSONObject("headers").toString());
-//         try {
-//             MFPRequest fullRequest = new MFPRequest(url, method);
-//
-//         } catch (MalformedURLException e) { e.printStackTrace(); }
-//         Map<String, List<String>> mapHeaders = jsonToMap(javascriptRequest.getJSONObject("headers"));
-//         fullRequest.setHeaders(mapHeaders);
-
-//         for(String header : fullRequest.getHeaders())
-//             Log.d(TAG, "Header: " + header);
-
-//         return fullRequest;
+        //Build the request for the native Android SDK
+        MFPRequest nativeRequest = null;
+        try {
+            nativeRequest = new MFPRequest(url, method);
+            nativeRequest.setTimeout(timeout);
+            nativeRequest.setHeaders(headers);
+            nativeRequest.setQueryParameters(queryParameters);
+        } catch (MalformedURLException e) { e.printStackTrace(); }
+        return nativeRequest;
     }
 
+    private static Map toNativeMap(JSONObject originalJSON) throws JSONException {
+        Map<String, Object> convertedMap = new HashMap<String, Object>();
 
-//     private Map<String, T> jsonToMap(JSONObject json) throws JSONException {
-//         Map<String, T> retMap = new HashMap<String, T>();
-//
-//         if(json != JSONObject.NULL) {
-//             retMap = toMap(json);
-//         }
-//         return retMap;
-//     }
-//
-//     private Map<String, T> toMap(JSONObject object) throws JSONException {
-//         Map<String, T> map = new HashMap<String, T>();
-//
-//         Iterator<String> keysItr = object.keys();
-//         while(keysItr.hasNext()) {
-//             String key = keysItr.next();
-//             T value = object.get(key);
-//
-//             if(value instanceof JSONArray) {
-//                 value = toList((JSONArray) value);
-//             }
-//
-//             else if(value instanceof JSONObject) {
-//                 value = toMap((JSONObject) value);
-//             }
-//             map.put(key, value);
-//         }
-//         return map;
-//     }
-//
-//     private List<T> toList(JSONArray array) throws JSONException {
-//         List<T> list = new ArrayList<T>();
-//         for(int i = 0; i < array.length(); i++) {
-//             T value = array.get(i);
-//             if(value instanceof JSONArray) {
-//                 value = toList((JSONArray) value);
-//             }
-//
-//             else if(value instanceof JSONObject) {
-//                 value = toMap((JSONObject) value);
-//             }
-//             list.add(value);
-//         }
-//         return list;
-//     }
+        Iterator<?> keys = originalJSON.keys();
+        while(keys.hasNext()) {
+            String key = (String)keys.next();
+            // Handle Header data
+            if(originalJSON.get(key) instanceof JSONArray) {
+                JSONArray headerValues = originalJSON.getJSONArray(key);
+                ArrayList<String> listedHeaderValues = new ArrayList<String>();
+                for(int i=0; i < headerValues.length(); i++) {
+                    listedHeaderValues.add(headerValues.getString(i));
+                }
+
+                convertedMap.put(key, listedHeaderValues);
+            }
+            // Handle QueryParameter data
+            else if (originalJSON.get(key) instanceof String) {
+                convertedMap.put(key, originalJSON.getString(key));
+            }
+        }
+        return convertedMap;
+    }
 
     public void send(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, "In send()");
         JSONObject myrequest = args.getJSONObject(0);
-
-        String url = myrequest.getString("url");
-        String method = myrequest.getString("method");
-        Log.d(TAG, "The passed dictionary: " + myrequest);
-
         try {
-            unpackRequest(myrequest);
-            final MFPRequest req = new MFPRequest(url, method);
-//             final MFPRequest req = unpackRequest(myrequest);
-
-            Log.d(TAG, "Testing the request");
-            Log.d(TAG, " req.getUrl: " + req.getUrl());
-            Log.d(TAG, " req.getMethod: " + req.getMethod());
-
-            req.addHeader("SEHeaderName1", "SEHeaderValue1");
-            req.setQueryParameter("SEQP1", "SEQP1value");
-
+            final MFPRequest nativeRequest = unpackRequest(myrequest);
+            printNativeRequest(nativeRequest);
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
-                    req.send("SE Hello", new ResponseListener() {
+                    nativeRequest.send("Hard-coded body text", new ResponseListener() {
                         @Override
                         public void onSuccess(Response response) {
                             Log.d(TAG, "Success: " + response.getResponseText());
@@ -146,9 +109,37 @@ public class MFPResourceRequest extends CordovaPlugin {
 
         } catch (MalformedURLException e) { e.printStackTrace(); }
     }
+
     public static void sendFormParameters(JSONArray args, CallbackContext callbackContext) throws JSONException {
         JSONObject myrequest = args.getJSONObject(0);
 
+    }
+
+    private void printNativeRequest(MFPRequest theRequest) throws MalformedURLException {
+        Log.d(TAG, "[START] printNativeRequest()");
+        Log.d(TAG, "URL = \t" + theRequest.getUrl());
+        Log.d(TAG, "Method = \t" + theRequest.getMethod());
+        Log.d(TAG, "Timeout = \t" + theRequest.getTimeout());
+
+        Map<String, List<String>> native_headers = theRequest.getAllHeaders();
+        Map<String, String> native_params        = theRequest.getQueryParameters();
+
+        Log.d(TAG, "-----Headers-----");
+        for (String key: native_headers.keySet()){
+                    List<String> value = native_headers.get(key);
+
+                    Log.d(TAG, "Header Name = " + key);
+                    for(String headerValue : value) {
+                        Log.d(TAG, "\tvalue = " + headerValue);
+                    }
+        }
+
+        Log.d(TAG, "-----Queries-----");
+        for (String key: native_params.keySet()){
+                    String value = native_params.get(key).toString();
+                    Log.d(TAG, key + " : " + value);
+        }
+        Log.d(TAG, "[END] printNativeRequest()");
     }
 
 }

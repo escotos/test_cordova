@@ -30,7 +30,6 @@
 
         <config-file parent="/*" target="AndroidManifest.xml"/>
 
-        <!--<source-file src="src/android/MFPCore.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />-->
         <source-file src="src/android/MFPClient.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
         <source-file src="src/android/MFPResourceRequest.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
     </platform>

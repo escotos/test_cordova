@@ -111,9 +111,9 @@ var MFPResourceRequest = function(url, method) {
 	 *
 	 * @param timeout
 	 */
-	this.setTimeout = function(_timeout) {
+	this.setTimeout = function(timeout) {
 		console.log(this.TAG + "setTimeout()");
-		this._timeout = _timeout;
+		this._timeout = timeout;
 	};
 
 	/**
@@ -141,7 +141,7 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.setQueryParameter = function(name, value) {
 		console.log(this.TAG + "log: setQueryParameter(name, value)");
-		this._queryParameters["name"] = value;
+		this._queryParameters[name] = value;
 	};
 
 	/**
@@ -163,11 +163,11 @@ var MFPResourceRequest = function(url, method) {
 		if (typeof arg === "undefined") {
 			// No input
 			console.log(this.TAG + "send : no arguments");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildTheRequest()]);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildRequest()]);
 		} else if (typeof arg === "string" || typeof arg === "object") {
 			// Input = String or JSON
 			console.log(this.TAG + "send : string or object");
-			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildTheRequest(body)]);
+			cordova.exec(success, failure, "MFPResourceRequest", "send", [this.buildRequest(arg)]);
 		}
 	};
 
@@ -177,10 +177,10 @@ var MFPResourceRequest = function(url, method) {
 	 */
 	this.sendFormParameters = function(jsonObj) {
 		console.log(this.TAG + "sendFormParameters()");
-		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [this.buildTheRequest(jsonObj)]);
+		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [this.buildRequest(jsonObj)]);
 	};
 
-	this.buildTheRequest = function(body) {
+	this.buildRequest = function(body) {
 		var req = {};
 
 		req.url 			= this.getUrl();

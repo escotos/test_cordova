@@ -1,4 +1,4 @@
-cordova.define("ibm-mfp-core.MFPResourceRequest", function(require, exports, module) { var exec = require("cordova/exec");
+var exec = require("cordova/exec");
 
 var MFPResourceRequest = function(url, method) {
 	this.TAG = "javascript-MFPResourceRequest ";
@@ -231,4 +231,3 @@ MFPResourceRequest.POST = "POST";
 MFPResourceRequest.DELETE = "DELETE";
 
 module.exports = MFPResourceRequest;
-});

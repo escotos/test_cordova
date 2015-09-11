@@ -125,15 +125,15 @@ exports.defineAutoTests = function () {
 			it('should add a header with addHeader', function() {
 				testRequest.addHeader("someheader", "somevalue");
 
-				expect(testRequest._headers["someheader"]).toBeDefined();
-				expect(testRequest._headers["someheader"]).toEqual(["somevalue"]);
+				expect(testRequest._headers.someheader).toBeDefined();
+				expect(testRequest._headers.someheader).toEqual(["somevalue"]);
 			});
 
 			it('should change headers with setHeader', function() {
 				testRequest.setHeader("newheader", "newvalue");
 
-				expect(testRequest._headers["newheader"]).toBeDefined();
-				expect(testRequest._headers["newheader"]).toEqual(["newvalue"]);
+				expect(testRequest._headers.newheader).toBeDefined();
+				expect(testRequest._headers.newheader).toEqual(["newvalue"]);
 			});
 
 			it('should remove headers with removeHeaders', function() {
@@ -141,7 +141,7 @@ exports.defineAutoTests = function () {
 				testRequest.addHeader("someheader", "somevalue2");
 				testRequest.removeHeaders("someheader");
 
-				expect(testRequest._headers["someheader"]).not.toBeDefined();
+				expect(testRequest._headers.someheader).not.toBeDefined();
 				expect(testRequest._headers).toEqual( {} );
 			});
 
@@ -197,8 +197,8 @@ exports.defineAutoTests = function () {
 			});
 
 			it('should retrieve the list of query parameters with getQueryParameters', function() {
-				testRequest._queryParameters["somequery"] = "somevalue";
-				testRequest._queryParameters["anotherquery"] = "anothervalue";
+				testRequest._queryParameters.somequery = "somevalue";
+				testRequest._queryParameters.anotherquery = "anothervalue";
 				expect(testRequest.getQueryParameters()).toEqual({"somequery": "somevalue", "anotherquery": "anothervalue"});
 			});
 

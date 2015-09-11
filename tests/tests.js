@@ -139,11 +139,10 @@ exports.defineAutoTests = function () {
 			it('should remove headers with removeHeaders', function() {
 				testRequest.addHeader("someheader", "somevalue1");
 				testRequest.addHeader("someheader", "somevalue2");
-
 				testRequest.removeHeaders("someheader");
 
 				expect(testRequest._headers["someheader"]).not.toBeDefined();
-				expect(testRequest._headers).toEqual({});
+				expect(testRequest._headers).toEqual( {} );
 			});
 
 			it('should retrieve a header value with getHeader', function() {
@@ -165,7 +164,9 @@ exports.defineAutoTests = function () {
 				testRequest.addHeader("twoheader", "retrieve2");
 				testRequest.addHeader("threeheader", "retrieve3");
 
-				expect(testRequest.getAllHeaders()).toEqual({"oneheader":["retrieve1"], "twoheader": ["retrieve2"], "threeheader": ["retrieve3"]});
+				expect(testRequest.getAllHeaders()).toEqual({"oneheader":["retrieve1"],
+															"twoheader": ["retrieve2"],
+															"threeheader": ["retrieve3"]});
 			});
 
 			it('should retrieve the url with getUrl', function() {
@@ -201,8 +202,14 @@ exports.defineAutoTests = function () {
 				expect(testRequest.getQueryParameters()).toEqual({"somequery": "somevalue", "anotherquery": "anothervalue"});
 			});
 
-			xit('should correctly send a request with send', function() {});
+			//TODO
+			xit('should correctly send a request (no headers and no query parameters) with send', function() {});
 
+			xit('should correctly send a request (with headers and no query parameters) with send', function() {});
+
+			xit('should correctly send a request (with headers and query parameters) with send', function() {});
+
+			//TODO
 			xit('should correctly send a form request with sendFormParameters', function() {});
 
 			it('buildRequest - private method - should build and return an object correctly', function() {

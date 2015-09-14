@@ -28,6 +28,8 @@ import java.util.Iterator;
 public class MFPResourceRequest extends CordovaPlugin {
     private static final String TAG = "NATIVE-MFPResourceRequest";
 
+    private static final String EscapeRegex = "^([^\"\\\\]*(\\\\.)?)*$";
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if("send".equals(action)) {
@@ -147,29 +149,40 @@ public class MFPResourceRequest extends CordovaPlugin {
     private String packResponse(Response response) throws JSONException {
         JSONObject jsonResponse = new JSONObject();
 
-        jsonResponse.put("httpStatus", response.getStatus());
-        if (response.getResponseText() != null) {
-            jsonResponse.put("responseText", response.getResponseText());
-        }
-        if (response.getResponseJSON() != null) {
-            jsonResponse.put("responseJSON", response.getResponseJSON().toString());
-        }
-        if (response.getResponseHeaders() != null) {
-            Log.d(TAG, "packResponse: Received Response Headers");
-            JSONObject jsonHeaders = new JSONObject(response.getResponseHeaders());
-            Log.d(TAG, "packResponse headers to string: " + jsonHeaders.toString());
-            jsonResponse.put("headers", jsonHeaders.toString());
-        }
+        int httpStatus             = (response.getStatus() != 0)             ? response.getStatus() : 0;
+        String responseText        = (response.getResponseText() != null)    ? response.getResponseText() : "";
+        JSONObject responseJSON    = (response.getResponseJSON() != null)    ? response.getResponseJSON() : null;
+        JSONObject responseHeaders = (response.getResponseHeaders() != null) ? fromHashMaptoJSON(response.getResponseHeaders()) : null;
+        
+        jsonResponse.put("httpStatus", httpStatus);
+        jsonResponse.put("responseText", responseText);
+        jsonResponse.put("responseJSON", responseJSON);
+        jsonResponse.put("responseHeaders", responseHeaders);
 
         if(response instanceof FailResponse) {
-            jsonResponse.put("errorCode", response.getStatus());
-            jsonResponse.put("errorDescription", response.getStatus());
+            jsonResponse.put("errorCode", ((FailResponse) response).getErrorCode());
+            jsonResponse.put("errorDescription", responseText);
         }
 
-        Log.d(TAG, "packResponse final JSON: " + jsonResponse.toString());
+        Log.d(TAG, "packResponse -> Complete JSON");
+        Log.d(TAG, jsonResponse.toString());
+
         return jsonResponse.toString();
     }
 
+    private static JSONObject fromHashMaptoJSON(Map<String, List<String>> originalMap) throws JSONException {
+        JSONObject convertedJSON = new JSONObject();
+        Iterator it = originalMap.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            String key = (String) pair.getKey();
+            List<String> headerValuesList = (List<String>)pair.getValue();
+            for(String headerValue : headerValuesList) {
+                convertedJSON.put(key, headerValue);
+            }
+        }
+        return convertedJSON;
+    }
     private static Map fromJSONtoHashMap(JSONObject originalJSON) throws JSONException {
         Map<String, Object> convertedMap = new HashMap<String, Object>();
 

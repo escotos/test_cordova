@@ -12,7 +12,6 @@
 */
 var exec = require("cordova/exec");
 
-//Singleton
 var MFPClient = function() {
     this._backendRoute = "";
     this._backendGuid = "";

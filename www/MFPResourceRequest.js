@@ -140,7 +140,6 @@ var MFPResourceRequest = function(url, method) {
 	/**
 	 *
 	 * @param arg
-	 * @returns Promise
 	 */
 	this.send = function(arg, success, failure) {
 		if (typeof arg === "function") {
@@ -165,8 +164,14 @@ var MFPResourceRequest = function(url, method) {
 		cordova.exec(success, failure, "MFPResourceRequest", "sendFormParameters", [this.buildJSONRequest(jsonObj)]);
 	};
 
+	/**
+	 *
+	 * @param callback The Success or Failure callback
+	 * @param jsonResponse string : The string-form JSON response coming from the Native SDK.
+	 */
 	this.callbackWrap = function(callback, jsonResponse) {
-		var response = this.buildMFPResponse(JSON.parse(jsonResponse));
+		jsonResponse = JSON.parse(jsonResponse);
+		var response = this.buildMFPResponse(jsonResponse);
 		callback(response);
 	};
 
@@ -187,47 +192,57 @@ var MFPResourceRequest = function(url, method) {
 		return request;
 	};
 
+	/**
+	 * @param jsResponse The JSON Response as a proper Javascript Object
+	 */
 	this.buildMFPResponse = function(jsResponse) {
-		var response = new MFPResponse();
-		response.httpStatus = jsResponse.httpStatus;
-		response.responseText = jsResponse.responseText;
-		response.responseJSON = jsResponse.responseJSON;
-		response.headers = JSON.parse(jsResponse.headers);
+		var response 		     = new MFPResponse();
+		
+		response.httpStatus      = jsResponse.httpStatus;
+		response.responseText    = jsResponse.responseText;
+		response.responseJSON	 = jsResponse.responseJSON;
+		response.responseHeaders = jsResponse.responseHeaders;
 
-		console.log(this.TAG + "response.httpStatus = " + response.httpStatus);
-		console.log(this.TAG + "response.responseText = " + response.responseText);
-		console.log(this.TAG + "response.responseJSON = " + JSON.stringify(response.responseJSON));
-		console.log(this.TAG + "response.headers = " + JSON.stringify(response.headers));
-
+		console.log(this.TAG + " response.httpStatus: " + response.httpStatus);
+		console.log(this.TAG + " response.responseText: " + response.responseText);
+		console.log(this.TAG + " response.responseJSON: " + JSON.stringify(response.responseJSON));
+		console.log(this.TAG + " response.headers: " + JSON.stringify(response.responseHeaders));
+		
 		return response;
 	};
 
-	// TODO: Should we create an MFPResponse instance from a JSON object?
+	// TODO: Create an MFPResponse instance from a JSON object through a constructor?
 	var MFPResponse = function() {
 		this.httpStatus = "";
 		this.responseText = "";
 		this.responseJSON = {};
+		this.responseHeaders = {};
 		this.errorCode = "";
 		this.errorDescription = "";
-		this._headers = {};
+		
+		this.getAllHeaders = function() { return this.responseHeaders; };
 
-		this.getAllHeaders = function() { return this._headers; };
 		this.getHeaderNames = function() {
 			var keyNames = [];
-			for (var key in this._headers) {
-				if (this._headers.hasOwnProperty(key)) {
+			for (var key in this.responseHeaders) {
+				if (this.responseHeaders.hasOwnProperty(key)) {
 					keyNames.push(key);
 				}
 			}
 			return keyNames;
 		};
-		this.getHeader = function(name) { return this._headers[name][0]; };
-		this.getHeaders = function(name) { return this._headers[name]; };
+
+		this.getHeader = function(name) { return this.responseHeaders[name][0]; };
+
+		this.getHeaders = function(name) { return this.responseHeaders[name]; };
 	};
 };
 MFPResourceRequest.GET = "GET";
 MFPResourceRequest.PUT = "PUT";
 MFPResourceRequest.POST = "POST";
 MFPResourceRequest.DELETE = "DELETE";
+MFPResourceRequest.TRACE = "TRACE";
+MFPResourceRequest.HEAD = "HEAD";
+MFPResourceRequest.OPTIONS = "OPTIONS";
 
 module.exports = MFPResourceRequest;

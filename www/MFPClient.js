@@ -32,7 +32,7 @@ var MFPClient = function() {
     this.initialize = function(backendRoute, backendGuid) {
         this._backendRoute = backendRoute;
         this._backendGuid = backendGuid;
-        //cordova.exec(success, failure, "MFPClient", "initialize", [backendRoute, backendGuid]);
+        cordova.exec(success, failure, "MFPClient", "initialize", [backendRoute, backendGuid]);
     };
 
     /**

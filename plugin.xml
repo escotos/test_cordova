@@ -56,7 +56,7 @@
         <header-file src="src/ios/MFPCore.h" />
         <source-file src="src/ios/MFPCore.m"/>
 
-        <header-file src="src/ios/Bridging-Header.h" />
+        <header-file src="src/ios/HelloCordova-Bridging-Header.h" />
         <source-file src="src/ios/MFPClient.swift" />
         <source-file src="src/ios/MFPResourceRequest.swift" />
 

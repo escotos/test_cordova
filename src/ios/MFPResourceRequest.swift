@@ -10,21 +10,55 @@ import Foundation
 import IMFCore
 
 @objc(MFPResourceRequest) class MFPResourceRequest : CDVPlugin {
-    
-    func unPackRequest(requestDict:NSDictionary) -> IMFResourceRequest {
+
+    func send(command: CDVInvokedUrlCommand) {
+
+        let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
         
+        nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
+            if (error != nil) {
+                // process the error
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
+                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+            } else {
+                // process success
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: self.packResponse(response))
+                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+            }
+        } // end send
+    } // end func send
+
+        func sendFormParameters(command: CDVInvokedUrlCommand) {
+
+            let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
+
+            nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
+                if (error != nil) {
+                    // process the error
+                    let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
+                    self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+                } else {
+                    // process success
+                    let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: self.packResponse(response))
+                    self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+                }
+            } // end send
+        } // end func sendFormParameters
+
+    func unPackRequest(requestDict:NSDictionary) -> IMFResourceRequest {
+
         // create a native request
         let url     = requestDict.objectForKey("url") as! String
         let nativeRequest = IMFResourceRequest(path: url)
-        
+
         // method
         let method  = requestDict.objectForKey("method") as? String
         nativeRequest.setHTTPMethod(method)
-        
+
         // get the query parameters
         let requestQueryParamsDict = requestDict.objectForKey("queryParameters") as! Dictionary<String,String>
         nativeRequest.setParameters(requestQueryParamsDict)
-        
+
         // timeout
         let timeout = requestDict.objectForKey("timeout") as? Int
         nativeRequest.setTimeoutInterval(NSTimeInterval( timeout! ) )
@@ -44,63 +78,46 @@ import IMFCore
                 nativeRequest.setHTTPBody(bodyData)
             }
         }
-        
+
         // get the headers
         let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,[String]>
         let requestHeaderNamesArray = Array(requestHeaderDict.keys)
         var flattenedHeaders : Dictionary<String, String> = [:]
-        
+
         for name in requestHeaderNamesArray {
             var headerString: String = ""
-            
+
             // combine mutli-valued headers into a string
             for header in requestHeaderDict[ name ]!
             {
                 headerString += "\(header) "
             }
-            
+
             // trim the trailing space
             headerString = headerString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            
+
             // add the flattened headers to a dictionary
             flattenedHeaders[name] = headerString
         }
-        
+
         return nativeRequest
     }
 
-    func send(command: CDVInvokedUrlCommand) {
+    func packResponse(response: IMFResponse!) -> String {
+        //JSONObject jsonResponse = new JSONObject();
 
-        let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
-        
-        nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
-            if (error != nil) {
-                // process the error
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
-                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-            } else {
-                // process success
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: response.responseText)
-                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-            }
-        } // end send
-    } // end func send
+        //int httpStatus             = (response.getStatus() != 0)             ? response.getStatus() : 0;
+        //String responseText        = (response.getResponseText() != null)    ? response.getResponseText() : "";
+        //JSONObject responseJSON    = (response.getResponseJSON() != null)    ? response.getResponseJSON() : null;
+        //JSONObject responseHeaders = (response.getResponseHeaders() != null) ? fromHashMaptoJSON(response.getResponseHeaders()) : null;
 
-        func sendFormParameters(command: CDVInvokedUrlCommand) {
+        //jsonResponse.put("httpStatus", httpStatus);
+        //jsonResponse.put("responseText", responseText);
+        //jsonResponse.put("responseJSON", responseJSON);
+        //jsonResponse.put("responseHeaders", responseHeaders);
 
-            let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
 
-            nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
-                if (error != nil) {
-                    // process the error
-                    let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
-                    self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-                } else {
-                    // process success
-                    let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: response.responseText)
-                    self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-                }
-            } // end send
-        } // end func sendFormParameters
-
+        // return the json string
+        return "";
+    }
 } // end plugin

@@ -7,113 +7,80 @@
 //
 
 import Foundation
-
+import IMFCore
 
 @objc(MFPResourceRequest) class MFPResourceRequest : CDVPlugin {
     
-    func send(command: CDVInvokedUrlCommand) {
+    func unPackRequest(requestDict:NSDictionary) -> IMFResourceRequest {
         
-//        // split the input string into an array of integers
-//        var inputString = command.arguments[0] as! String
-//        var numbersStringArray = split(inputString) {$0 == ","}
-//        var intArray = map(numbersStringArray) { String($0).toInt() ?? 0 }
-//        
-//        // calculate the average
-//        var count = intArray.count
-//        var sum = intArray.reduce(0,combine: {$0 + $1})
-//        var avg = 0.0;
-//        
-//        // prevent divide by zero
-//        if (count > 0){
-//            avg = Double(sum) / Double(count)
+        // create a native request
+        let url     = requestDict.objectForKey("url") as! String
+        let nativeRequest = IMFResourceRequest(path: url)
+        
+        // method
+        let method  = requestDict.objectForKey("method") as? String
+        nativeRequest.setHTTPMethod(method)
+        
+        // get the query parameters
+        let requestQueryParamsDict = requestDict.objectForKey("queryParameters") as! Dictionary<String,String>
+        nativeRequest.setParameters(requestQueryParamsDict)
+        
+        // timeout
+        let timeout = requestDict.objectForKey("timeout") as? Int
+        nativeRequest.setTimeoutInterval(NSTimeInterval( timeout! ) )
+        
+//        // process the body
+//        if let body  = requestDict.objectForKey("body") as? NSDictionary {
+//            //let bodyData = body!.
+//            //nativeRequest.setHTTPBody(<#T##data: NSData!##NSData!#>)
 //        }
-//        
-//        // return the result as a json string
-//        let jsonObject: AnyObject = ["sum": sum, "avg": avg]
-//        var jsonResultString = JSONStringify(jsonObject, prettyPrinted:false)
-//        
-//        // return the json stringified results object to the caller
-//        var pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: jsonResultString)
-//        commandDelegate.sendPluginResult(pluginResult, callbackId:command.callbackId)
+//        else{
+//            let body = requestDict.objectForKey("body") as? String
+//            let bodyData = body!.dataUsingEncoding(NSUTF8StringEncoding)
+//            nativeRequest.setHTTPBody(bodyData)
+//        }
+        
+        // get the headers
+        let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,[String]>
+        let requestHeaderNamesArray = Array(requestHeaderDict.keys)
+        var flattenedHeaders : Dictionary<String, String> = [:]
+        
+        for name in requestHeaderNamesArray {
+            var headerString: String = ""
+            
+            // combine mutli-valued headers into a string
+            for header in requestHeaderDict[ name ]!
+            {
+                headerString += "\(header) "
+            }
+            
+            // trim the trailing space
+            headerString = headerString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            
+            // add the flattened headers to a dictionary
+            flattenedHeaders[name] = headerString
+        }
+        
+        return nativeRequest
     }
-}
 
+    func send(command: CDVInvokedUrlCommand) {
 
-///********* MFPResourceRequest.m Cordova Plugin Implementation *******/
-//
-//#import <Cordova/CDV.h>
-//#import "MFPResourceRequest.h"
-//#import <IMFCore/IMFResourceRequest.h>
-//#import <IMFCore/IMFResponse.h>
-
-//
-//@implementation MFPResourceRequest
-//
-//- (void)coolMethod:(CDVInvokedUrlCommand*)command
-//{
-//    CDVPluginResult* pluginResult = nil;
-//    NSString* echo = [command.arguments objectAtIndex:0];
-//    
-//    if (echo != nil && [echo length] > 0) {
-//        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
-//    } else {
-//        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-//    }
-//    
-//    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-//    }
-//    
-//    - (void)send:(CDVInvokedUrlCommand*)command
-//{
-//    
-//    CDVPluginResult* pluginResult = nil;
-//    
-//    NSString* args = [command.arguments objectAtIndex:0];
-//    //NSString* guid = [command.arguments objectAtIndex:0];
-//    NSLog(@"*********** %@" , args);
-//    
-//    //BEGIN LEN DEBUG TEST MAKING A REQUEST
-//    // create a request
-//    NSString* path = @"http://lnickers-core-test.mybluemix.net/yo";
-//    NSString* method = @"GET";
-//    NSDictionary* parameters = @{@"key1":@"Eezy",@"key2": @"Tutorials"};;
-//    NSTimeInterval timeoutInterval = 60000;
-//    IMFResourceRequest* imfResourceRequest = [IMFResourceRequest requestWithPath:path method:method parameters:parameters timeout:timeoutInterval];
-//    
-//    
-//    // set http body
-//    NSString* httpBodyString = @"{\"AAA\":\"AAA\",\"BBB\":\"BBB\"}";
-//    NSData* httpBody = [httpBodyString dataUsingEncoding:NSUTF8StringEncoding];
-//    [imfResourceRequest setHTTPBody:httpBody];
-//    
-//    
-//    // set a header
-//    [imfResourceRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    
-//    // update the timeout interval
-//    [imfResourceRequest setTimeoutInterval:50000];
-//    
-//    // set the request method
-//    [imfResourceRequest setHTTPMethod:@"GET"];
-//    
-//    
-//    //[imfResourceRequest sendWithCompletionHandler:<#^(IMFResponse *response, NSError *error)completionHandler#>];
-//    [imfResourceRequest sendWithCompletionHandler:^(IMFResponse *response, NSError *error) {
-//    if (error) {
-//    NSLog(@"YO BRAAAA!!! %@",[NSString stringWithFormat:@"%@", [error description]]);
-//    }
-//    else{
-//    NSLog(@"YO BRAAAA!!! %@",[NSString stringWithFormat:@"%@", [response responseText]]);
-//    }
-//    
-//    }];
-//    
-//    
-//    //pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%d", (int)version]];
-//    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:args];
-//    //NSLog(@"YO!!! %@",[NSString stringWithFormat:@"%d", (int)version]);
-//    
-//    
-//    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-//}
-//@end
+        let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
+        
+        nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
+            if (error != nil) {
+                // process the error
+                print("Error  in ViewController\(error.localizedDescription)")
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
+                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+            } else {
+                // process success
+                print("Response in ViewController \(response)")
+                print("Response text in ViewController \(response.responseText)")
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: response.responseText)
+                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
+            }
+        } // end send
+    } // end func
+} // end plugin

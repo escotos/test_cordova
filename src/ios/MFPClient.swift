@@ -6,7 +6,7 @@
 //
 //
 import Foundation
-import Core
+import IMFCore
 
 @objc(MFPClient) class MFPClient : CDVPlugin {
     
@@ -16,10 +16,9 @@ import Core
         let guid = command.arguments[0] as! String
 
         let client = IMFClient.sharedInstance()
-        client.initialize(route,guid)
+        client.initializeWithBackendRoute(route, backendGUID: guid)
 
         var pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: "")
         commandDelegate.sendPluginResult(pluginResult, callbackId:command.callbackId)
     }
 }
-

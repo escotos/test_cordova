@@ -13,7 +13,7 @@ import IMFCore
     func initialize(command: CDVInvokedUrlCommand) {
         
         let route = command.arguments[0] as! String
-        let guid = command.arguments[0] as! String
+        let guid = command.arguments[1] as! String
         
         let client = IMFClient.sharedInstance()
         client.initializeWithBackendRoute(route, backendGUID: guid)

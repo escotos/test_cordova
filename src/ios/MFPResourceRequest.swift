@@ -18,7 +18,7 @@ import IMFCore
         nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
             if (error != nil) {
                 // process the error
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: self.packResponse(response,error: error))
                 self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
             } else {
                 // process success
@@ -35,7 +35,7 @@ import IMFCore
         nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
             if (error != nil) {
                 // process the error
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: error.localizedDescription)
+                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: self.packResponse(response,error: error))
                 self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
             } else {
                 // process success
@@ -103,14 +103,18 @@ import IMFCore
         return nativeRequest
     }
     
-    func packResponse(response: IMFResponse!) -> String {
+    func packResponse(response: IMFResponse!,error:NSError?=nil) -> String {
         
         let jsonResponse:NSMutableDictionary = [:]
         
-        
-        jsonResponse.setObject(Int(response.httpStatus), forKey: "httpStatus")
-        jsonResponse.setObject(response.responseHeaders, forKey: "responseHeaders")
-        
+        if error != nil {
+            jsonResponse.setObject(Int((error!.code)), forKey: "errorCode")
+            jsonResponse.setObject((error!.localizedDescription), forKey: "errorDescription")
+        }
+        else {
+            jsonResponse.setObject(Int((0)), forKey: "errorCode")
+            jsonResponse.setObject("", forKey: "errorDescription")
+        }
         
         let responseText: String = (response.responseText != nil)    ? response.responseText : ""
         jsonResponse.setObject(responseText, forKey: "responseText")
@@ -122,7 +126,8 @@ import IMFCore
             jsonResponse.setObject("", forKey: "responseJSON")
         }
         
-        
+        jsonResponse.setObject(response.headers, forKey:"responseHeaders")
+        jsonResponse.setObject(Int(response.httpStatus), forKey:"httpStatus")
         // return the json string
         print(self.JSONStringify(jsonResponse, prettyPrinted: true))
         return self.JSONStringify(jsonResponse);
@@ -133,7 +138,7 @@ import IMFCore
         let options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : NSJSONWritingOptions(rawValue: 0)
         
         if NSJSONSerialization.isValidJSONObject(value) {
-            let serializationError: NSError? = nil
+            
             do {
                 let data = try NSJSONSerialization.dataWithJSONObject(value, options: options)
                 
@@ -141,11 +146,8 @@ import IMFCore
                     return string as String
                 }
                 
-                if (serializationError != nil){
-                    print("error")
-                    //Access error here
-                }
-            } catch {
+            } catch  {
+                
             }
         }
         return ""

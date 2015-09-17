@@ -134,15 +134,18 @@ import IMFCore
         
         if NSJSONSerialization.isValidJSONObject(value) {
             var serializationError: NSError?
-            let data = NSJSONSerialization.dataWithJSONObject(value, options: options,error:&serializationError)
-            
-            if let string = NSString(data: data!, encoding: NSUTF8StringEncoding) {
-                return string as String
-            }
-            
-            if (serializationError != nil){
-                print("error")
-                //Access error here
+            do {
+                let data = try NSJSONSerialization.dataWithJSONObject(value, options: options)
+                
+                if let string = NSString(data: data, encoding: NSUTF8StringEncoding) {
+                    return string as String
+                }
+                
+                if (serializationError != nil){
+                    print("error")
+                    //Access error here
+                }
+            } catch {
             }
         }
         return ""

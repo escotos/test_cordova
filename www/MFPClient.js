@@ -41,7 +41,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        cordova.exec(success, failure, "MFPClient", "registerAuthenticationListener" [realm, authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "registerAuthenticationListener", [realm, authenticationListener]);
     };
 
     /**
@@ -49,7 +49,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener" [authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener", [authenticationListener]);
     };
 
     /**
@@ -58,6 +58,22 @@ var MFPClient = function() {
      */
 	this.version = function() {
         return this._version;
+    };
+
+    /**
+     *
+     * @param callback
+     */
+    this.getBluemixAppRoute = function(callback) {
+        cordova.exec(callback, callback, "MFPClient", "backendRoute", []);
+    };
+
+    /**
+     *
+     * @param callback
+     */
+    this.getBluemixAppGUID = function(callback) {
+        cordova.exec(callback, callback, "MFPClient", "backendGUID", []);
     };
 };
 

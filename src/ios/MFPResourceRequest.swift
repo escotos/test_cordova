@@ -69,7 +69,7 @@ import IMFCore
             //BEGIN LEN DEBUG
             //let bodyData = body!.
             //nativeRequest.setHTTPBody(data: NSData!)
-            print("!!! !!! !!! !!! BODY IS A DICTIONARY !!! !!! !!! !!!", appendNewline: false)
+            print("!!! !!! !!! !!! BODY IS A DICTIONARY !!! !!! !!! !!!", terminator: "")
             //END LEN DEBUG
         }
         else {
@@ -133,7 +133,7 @@ import IMFCore
         let options = prettyPrinted ? NSJSONWritingOptions.PrettyPrinted : NSJSONWritingOptions(rawValue: 0)
         
         if NSJSONSerialization.isValidJSONObject(value) {
-            var serializationError: NSError?
+            let serializationError: NSError? = nil
             do {
                 let data = try NSJSONSerialization.dataWithJSONObject(value, options: options)
                 

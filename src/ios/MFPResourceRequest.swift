@@ -82,7 +82,7 @@ import IMFCore
         // get the headers
         let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,[String]>
         let requestHeaderNamesArray = Array(requestHeaderDict.keys)
-        var flattenedHeaders : Dictionary<String, String> = [:]
+        
         
         for name in requestHeaderNamesArray {
             var headerString: String = ""
@@ -96,9 +96,10 @@ import IMFCore
             // trim the trailing space
             headerString = headerString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             
-            // add the flattened headers to a dictionary
-            flattenedHeaders[name] = headerString
+            // add the flattened headers to the request
+            nativeRequest.setValue(headerString, forHTTPHeaderField: name)
         }
+        
         
         return nativeRequest
     }
@@ -125,8 +126,14 @@ import IMFCore
         else {
             jsonResponse.setObject("", forKey: "responseJSON")
         }
+        // if we have an error we have no response headers
+        if response.responseHeaders != nil {
+            jsonResponse.setObject(response.responseHeaders, forKey:"responseHeaders")
+        }
+        else{
+            jsonResponse.setObject([], forKey:"responseHeaders")
+        }
         
-        jsonResponse.setObject(response.headers, forKey:"responseHeaders")
         jsonResponse.setObject(Int(response.httpStatus), forKey:"httpStatus")
         // return the json string
         print(self.JSONStringify(jsonResponse, prettyPrinted: true))

@@ -11,6 +11,14 @@ var MFPResourceRequest = function (url, method, timeout) {
     this._timeout = timeout || 30000;
 };
 
+    MFPResourceRequest.GET = "GET";
+    MFPResourceRequest.PUT = "PUT";
+    MFPResourceRequest.POST = "POST";
+    MFPResourceRequest.DELETE = "DELETE";
+    MFPResourceRequest.TRACE = "TRACE";
+    MFPResourceRequest.HEAD = "HEAD";
+    MFPResourceRequest.OPTIONS = "OPTIONS";
+
 MFPResourceRequest.prototype = function () {
 
     /**
@@ -135,13 +143,6 @@ MFPResourceRequest.prototype = function () {
     };
 
     return {
-        GET: "GET",
-        PUT: "PUT",
-        POST: "POST",
-        DELETE: "DELETE",
-        TRACE: "TRACE",
-        HEAD: "HEAD",
-        OPTIONS: "OPTIONS",
         setHeaders: setHeaders,
         getHeaders: getHeaders,
         getUrl: getUrl,

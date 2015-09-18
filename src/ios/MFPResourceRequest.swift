@@ -27,24 +27,7 @@ import IMFCore
             }
         } // end send
     } // end func send
-    
-    func sendFormParameters(command: CDVInvokedUrlCommand) {
-        
-        let nativeRequest = unPackRequest(command.arguments[0] as! NSDictionary)
-        
-        nativeRequest.sendWithCompletionHandler { (response: IMFResponse!, error: NSError!) -> Void in
-            if (error != nil) {
-                // process the error
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: self.packResponse(response,error: error))
-                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-            } else {
-                // process success
-                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: self.packResponse(response))
-                self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-            }
-        } // end send
-    } // end func sendFormParameters
-    
+
     func unPackRequest(requestDict:NSDictionary) -> IMFResourceRequest {
         
         // create a native request
@@ -64,21 +47,11 @@ import IMFCore
         nativeRequest.setTimeoutInterval(NSTimeInterval( timeout! ) )
         
         // process the body
-        if let body  = requestDict.objectForKey("body") as? NSDictionary {
-            
-            //BEGIN LEN DEBUG
-            //let bodyData = body!.
-            //nativeRequest.setHTTPBody(data: NSData!)
-            print("!!! !!! !!! !!! BODY IS A DICTIONARY !!! !!! !!! !!!", terminator: "")
-            //END LEN DEBUG
+        if let body = requestDict.objectForKey("body") as? String {
+            let bodyData = body.dataUsingEncoding(NSUTF8StringEncoding)
+            nativeRequest.setHTTPBody(bodyData)
         }
-        else {
-            if let body = requestDict.objectForKey("body") as? String {
-                let bodyData = body.dataUsingEncoding(NSUTF8StringEncoding)
-                nativeRequest.setHTTPBody(bodyData)
-            }
-        }
-        
+
         // get the headers
         let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,[String]>
         let requestHeaderNamesArray = Array(requestHeaderDict.keys)
@@ -119,22 +92,16 @@ import IMFCore
         
         let responseText: String = (response.responseText != nil)    ? response.responseText : ""
         jsonResponse.setObject(responseText, forKey: "responseText")
-        
-        if response.responseJson != nil && NSJSONSerialization.isValidJSONObject(response.responseJson) {
-            jsonResponse.setObject(response.responseJson, forKey: "responseJSON")
-        }
-        else {
-            jsonResponse.setObject("", forKey: "responseJSON")
-        }
+
         // if we have an error we have no response headers
         if response.responseHeaders != nil {
-            jsonResponse.setObject(response.responseHeaders, forKey:"responseHeaders")
+            jsonResponse.setObject(response.responseHeaders, forKey:"headers")
         }
         else{
-            jsonResponse.setObject([], forKey:"responseHeaders")
+            jsonResponse.setObject([], forKey:"headers")
         }
         
-        jsonResponse.setObject(Int(response.httpStatus), forKey:"httpStatus")
+        jsonResponse.setObject(Int(response.httpStatus), forKey:"status")
         // return the json string
         print(self.JSONStringify(jsonResponse, prettyPrinted: true))
         return self.JSONStringify(jsonResponse);

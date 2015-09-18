@@ -52,28 +52,15 @@ import IMFCore
             nativeRequest.setHTTPBody(bodyData)
         }
 
+        //TODO Verify dictionary is string to string or string to list of strings now that api changed
         // get the headers
-        let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,[String]>
+        let requestHeaderDict = requestDict.objectForKey("headers") as! Dictionary<String,String>
         let requestHeaderNamesArray = Array(requestHeaderDict.keys)
-        
-        
+
         for name in requestHeaderNamesArray {
-            var headerString: String = ""
-            
-            // combine mutli-valued headers into a string
-            for header in requestHeaderDict[ name ]!
-            {
-                headerString += "\(header) "
-            }
-            
-            // trim the trailing space
-            headerString = headerString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            
-            // add the flattened headers to the request
-            nativeRequest.setValue(headerString, forHTTPHeaderField: name)
+            nativeRequest.setValue(requestHeaderDict[ name ]!, forHTTPHeaderField: name)
         }
-        
-        
+
         return nativeRequest
     }
     
@@ -90,18 +77,27 @@ import IMFCore
             jsonResponse.setObject("", forKey: "errorDescription")
         }
         
-        let responseText: String = (response.responseText != nil)    ? response.responseText : ""
-        jsonResponse.setObject(responseText, forKey: "responseText")
-
-        // if we have an error we have no response headers
-        if response.responseHeaders != nil {
-            jsonResponse.setObject(response.responseHeaders, forKey:"headers")
-        }
-        else{
+        if (response == nil)
+        {
+            jsonResponse.setObject("", forKey: "responseText")
             jsonResponse.setObject([], forKey:"headers")
+            jsonResponse.setObject(Int(0), forKey:"status")
+        }
+        else {
+                let responseText: String = (response.responseText != nil)    ? response.responseText : ""
+                jsonResponse.setObject(responseText, forKey: "responseText")
+                
+                // if we have an error we have no response headers
+                if response.responseHeaders != nil {
+                    jsonResponse.setObject(response.responseHeaders, forKey:"headers")
+                }
+                else{
+                    jsonResponse.setObject([], forKey:"headers")
+                }
+                
+                jsonResponse.setObject(Int(response.httpStatus), forKey:"status")
         }
         
-        jsonResponse.setObject(Int(response.httpStatus), forKey:"status")
         // return the json string
         print(self.JSONStringify(jsonResponse, prettyPrinted: true))
         return self.JSONStringify(jsonResponse);

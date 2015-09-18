@@ -1,133 +1,157 @@
-var exec = require("cordova/exec");
 
-var MFPResourceRequest = function(url, method, timeout) {
-	this.TAG = "javascript-MFPResourceRequest ";
 
-	this._headers = {};
-	this._queryParameters = {};
-	this._url = url;
-	this._method = method;
-	this._timeout = timeout || 30000;
+var MFPResourceRequest = function (url, method, timeout) {
+    var exec = require("cordova/exec");
+    this.TAG = "javascript-MFPResourceRequest ";
 
-	/**
-	 *	Destructively modify an existing header name
-	 * @param name
-	 * @param value
-	 */
-	this.setHeaders = function(jsonObj) {
-		//performant Deep Clone the json object
-		this._headers = JSON.parse(JSON.stringify(jsonObj));
-	};
+    this._headers = {};
+    this._queryParameters = {};
+    this._url = url;
+    this._method = method;
+    this._timeout = timeout || 30000;
+};
 
-	/**
-	 * Return a list of the value or all the values associated with the given header name
-	 * @param name
-	 * @returns {null, string}
-	 */
-	this.getHeaders = function() {
-		return this._headers;
-	};
+MFPResourceRequest.prototype = function () {
 
-	/**
-	 *
-	 * @returns {string}
-	 */
-	this.getUrl = function() {
-		return this._url;
-	};
+    /**
+     *    Destructively modify an existing header name
+     * @param name
+     * @param value
+     */
+    var setHeaders = function (jsonObj) {
+        //performant Deep Clone the json object
+        this._headers = JSON.parse(JSON.stringify(jsonObj));
+    };
 
-	/**
-	 *
-	 * @returns {string}
-	 */
-	this.getMethod = function() {
-		return this._method;
-	};
+    /**
+     * Return a list of the value or all the values associated with the given header name
+     * @param name
+     * @returns {null, string}
+     */
+    var getHeaders = function () {
+        return this._headers;
+    };
 
-	/**
-	 *
-	 * @returns {number}
-	 */
-	this.getTimeout = function() {
-		return this._timeout;
-	};
+    /**
+     *
+     * @returns {string}
+     */
+    var getUrl = function () {
+        return this._url;
+    };
 
-	/**
-	 *
-	 * @returns JSON
-	 */
-	this.getQueryParameters = function() {
-		return this._queryParameters;
-	};
+    /**
+     *
+     * @returns {string}
+     */
+    var getMethod = function () {
+        return this._method;
+    };
 
-	/**
-	 *
-	 * @param json_object
-	 */
-	this.setQueryParameters = function(jsonObj) {
-		//performant Deep Clone the json object
-		this._queryParameters = JSON.parse(JSON.stringify(jsonObj));
-	};
+    /**
+     *
+     * @returns {number}
+     */
+    var getTimeout = function () {
+        return this._timeout;
+    };
 
-	/**
-	 *
-	 * @param arg
-	 */
-	this.send = function(arg, success, failure) {
-		if (typeof arg === "function") {
-			// Empty argument
-			failure = success;
-			success = arg;
-			console.log(this.TAG + " send with empty body");
-			cordova.exec(this.callbackWrap.bind(this, success), this.callbackWrap.bind(this, failure), "MFPResourceRequest", "send", [this.buildJSONRequest()]);
-		} else if (typeof arg === "string" || typeof arg === "object") {
-			// Input = String or JSON
-			console.log(this.TAG + " send with string or object for the body");
-			cordova.exec(this.callbackWrap.bind(this, success), this.callbackWrap.bind(this, failure), "MFPResourceRequest", "send", [this.buildJSONRequest(arg)]);
-		}
-	};
+    /**
+     *
+     * @returns JSON
+     */
+    var getQueryParameters = function () {
+        return this._queryParameters;
+    };
 
-	/**
-	 *
-	 * @param callback The Success or Failure callback
-	 * @param jsonResponse string : The string-form JSON response coming from the Native SDK.
-	 */
-	this.callbackWrap = function(callback, jsonResponse) {
-		var response = JSON.parse(jsonResponse);
-		callback(response);
-	};
+    /**
+     *
+     * @param json_object
+     */
+    var setQueryParameters = function (jsonObj) {
+        //performant Deep Clone the json object
+        this._queryParameters = JSON.parse(JSON.stringify(jsonObj));
+    };
 
-	this.buildJSONRequest = function(body) {
-		var request = {};
+    /**
+     *
+     * @param arg
+     */
+    var send = function (arg, success, failure) {
 
-		request.url 			= this.getUrl();
-		request.method 			= this.getMethod();
-		request.headers 		= this.getHeaders();
-		request.timeout 		= this.getTimeout();
-		request.queryParameters = this.getQueryParameters();
-		request.body			= "";
+        var buildRequest = buildJSONRequest.bind(this);
 
-		if (typeof body === "string") {
-			request.body = body;
-		}
-        else if (typeof body === "object"){
+        if (typeof arg === "function") {
+            // Empty argument
+            failure = success;
+            success = arg;
+
+            var cbSuccess = callbackWrap.bind(this, success);
+            var cbFailure = callbackWrap.bind(this, failure);
+            console.log(this.TAG + " send with empty body");
+
+            cordova.exec(cbSuccess, cbFailure, "MFPResourceRequest", "send", [buildRequest()]);
+        } else if (typeof arg === "string" || typeof arg === "object") {
+            var cbSuccess = callbackWrap.bind(this, success);
+            var cbFailure = callbackWrap.bind(this, failure);
+            // Input = String or JSON
+            console.log(this.TAG + " send with string or object for the body");
+            cordova.exec(cbSuccess, cbFailure, "MFPResourceRequest", "send", [buildRequest(arg)]);
+        }
+    };
+
+    /**
+     *
+     * @param callback The Success or Failure callback
+     * @param jsonResponse string : The string-form JSON response coming from the Native SDK.
+     */
+    var callbackWrap = function (callback, jsonResponse) {
+        var response = JSON.parse(jsonResponse);
+        callback(response);
+    };
+
+    var buildJSONRequest = function (body) {
+        var request = {};
+
+        request.url = this.getUrl();
+        request.method = this.getMethod();
+        request.headers = this.getHeaders();
+        request.timeout = this.getTimeout();
+        request.queryParameters = this.getQueryParameters();
+        request.body = "";
+
+        if (typeof body === "string") {
+            request.body = body;
+        }
+        else if (typeof body === "object") {
             request.body = JSON.stringify(body);
-            if (!("Content-Type" in this._headers)){
+            if (!("Content-Type" in this._headers)) {
                 request.headers["Content-Type"] = "application/json";
             }
         }
-        
-		console.log(this.TAG + " The request is: " + JSON.stringify(request));
-		return request;
-	};
 
-};
-MFPResourceRequest.GET = "GET";
-MFPResourceRequest.PUT = "PUT";
-MFPResourceRequest.POST = "POST";
-MFPResourceRequest.DELETE = "DELETE";
-MFPResourceRequest.TRACE = "TRACE";
-MFPResourceRequest.HEAD = "HEAD";
-MFPResourceRequest.OPTIONS = "OPTIONS";
+        console.log(this.TAG + " The request is: " + JSON.stringify(request));
+        return request;
+    };
+
+    return {
+        GET: "GET",
+        PUT: "PUT",
+        POST: "POST",
+        DELETE: "DELETE",
+        TRACE: "TRACE",
+        HEAD: "HEAD",
+        OPTIONS: "OPTIONS",
+        setHeaders: setHeaders,
+        getHeaders: getHeaders,
+        getUrl: getUrl,
+        getMethod: getMethod,
+        getTimeout: getTimeout,
+        setQueryParameters: setQueryParameters,
+        getQueryParameters: getQueryParameters,
+        send: send
+    }
+}();
+
 
 module.exports = MFPResourceRequest;

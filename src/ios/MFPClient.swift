@@ -22,14 +22,6 @@ import IMFCore
         commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
     }
     
-    func version(command: CDVInvokedUrlCommand) {
-        
-        let version = IMFCore.version()
-        
-        let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: version)
-        commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
-    }
-    
     func backendRoute(command: CDVInvokedUrlCommand) {
         
         let client = IMFClient.sharedInstance()

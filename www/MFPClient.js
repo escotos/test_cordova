@@ -16,7 +16,6 @@ var MFPClient = function() {
     this._backendRoute = "";
     this._backendGuid = "";
     this._challengeHandlers = {};
-    this._version = "0.0.1";
 
     var success = function(msg) { console.log("MFPClient success: " + msg) };
 
@@ -50,14 +49,6 @@ var MFPClient = function() {
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
         cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener", [authenticationListener]);
-    };
-
-    /**
-     * Prints out the plugin version
-     * @returns {string}
-     */
-	this.version = function() {
-        return this._version;
     };
 
     /**

@@ -16,6 +16,9 @@ import IMFCore
         let guid = command.arguments[1] as! String
         
         let client = IMFClient.sharedInstance()
+        
+        //TODO handle exception
+        //*** WebKit discarded an uncaught exception in the webView:decidePolicyForNavigationAction:request:frame:decisionListener: delegate: <InvalidURLException> Invalid applicationRoute: SOME BAD route
         client.initializeWithBackendRoute(route, backendGUID: guid)
         
         let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsString: "")

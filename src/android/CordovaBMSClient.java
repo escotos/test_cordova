@@ -3,12 +3,13 @@ package com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.FailResponse;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.MFPRequest;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.ResourceRequest;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.Response;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.ResponseListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.core.api.*;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.FailResponse;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.MFPRequest;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.ResourceRequest;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.Response;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.ResponseListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthenticationContext;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthenticationListener;
 import com.ibm.mobilefirstplatform.clientsdk.android.security.api.AuthorizationManager;
@@ -26,8 +27,8 @@ import java.net.MalformedURLException;
 
 import java.lang.reflect.Method;
 
-public class MFPClient extends CordovaPlugin {
-    private static final String TAG = "NATIVE-MFPClient";
+public class CordovaBMSClient extends CordovaPlugin {
+    private static final String TAG = "NATIVE-BMSClient";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {

@@ -1,8 +1,6 @@
-
-
-var MFPResourceRequest = function (url, method, timeout) {
+var MFPRequest = function (url, method, timeout) {
     var exec = require("cordova/exec");
-    this.TAG = "javascript-MFPResourceRequest ";
+    this.TAG = "javascript-MFPRequest ";
 
     this._headers = {};
     this._queryParameters = {};
@@ -11,15 +9,15 @@ var MFPResourceRequest = function (url, method, timeout) {
     this._timeout = timeout || 30000;
 };
 
-    MFPResourceRequest.GET = "GET";
-    MFPResourceRequest.PUT = "PUT";
-    MFPResourceRequest.POST = "POST";
-    MFPResourceRequest.DELETE = "DELETE";
-    MFPResourceRequest.TRACE = "TRACE";
-    MFPResourceRequest.HEAD = "HEAD";
-    MFPResourceRequest.OPTIONS = "OPTIONS";
+    MFPRequest.GET = "GET";
+    MFPRequest.PUT = "PUT";
+    MFPRequest.POST = "POST";
+    MFPRequest.DELETE = "DELETE";
+    MFPRequest.TRACE = "TRACE";
+    MFPRequest.HEAD = "HEAD";
+    MFPRequest.OPTIONS = "OPTIONS";
 
-MFPResourceRequest.prototype = function () {
+MFPRequest.prototype = function () {
 
     /**
      *    Destructively modify an existing header name
@@ -154,5 +152,4 @@ MFPResourceRequest.prototype = function () {
     }
 }();
 
-
-module.exports = MFPResourceRequest;
+module.exports = MFPRequest;

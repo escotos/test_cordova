@@ -12,14 +12,14 @@
 */
 var exec = require("cordova/exec");
 
-var MFPClient = function() {
+var BMSClient = function() {
     this._backendRoute = "";
     this._backendGuid = "";
     this._challengeHandlers = {};
 
-    var success = function(msg) { console.log("MFPClient success: " + msg) };
+    var success = function(msg) { console.log("BMSClient success: " + msg) };
 
-    var failure = function(msg) { console.log("MFPClient Error: " + msg) };
+    var failure = function(msg) { console.log("BMSClient Error: " + msg) };
     /**
      * Sets the base URL for the authorization server.
      * <p>
@@ -47,7 +47,7 @@ var MFPClient = function() {
      * Unregisters the authentication callback for the specified realm.
      * @param {function} authenticationListener
      */
-	this.unregisterAuthenticationListener = function(authenticationListener) {
+    this.unregisterAuthenticationListener = function(authenticationListener) {
         cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener", [authenticationListener]);
     };
 
@@ -69,4 +69,4 @@ var MFPClient = function() {
 };
 
 //Return singleton instance
-module.exports = new MFPClient();
+module.exports = new BMSClient();

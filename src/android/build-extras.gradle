@@ -4,7 +4,9 @@ repositories {
     }
 }
 dependencies {
-    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
-        name: 'bms-core',
-        version: '0.1-SNAPSHOT'
+    compile group: 'com.ibm.mobilefirstplatform.bms.clientsdk.android',
+        name: 'bms-clientsdk-android-core',
+        version: '0.1-SNAPSHOT',
+        ext: 'aar',
+        transitive: true
 }

@@ -5,8 +5,9 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.*;
-import com.ibm.mobilefirstplatform.clientsdk.android.security.api.*;
-import com.ibm.mobilefirstplatform.clientsdk.android.logger.api.Logger;
+// import com.ibm.mobilefirstplatform.clientsdk.android.core.api.*;
+// import com.ibm.mobilefirstplatform.clientsdk.android.security.api.*;
+// import com.ibm.mobilefirstplatform.clientsdk.android.logger.api.Logger;
 
 import android.util.Log;
 import android.app.Activity;
@@ -25,34 +26,32 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MFPResourceRequest extends CordovaPlugin {
-    private static final String TAG = "NATIVE-MFPResourceRequest";
-
-    private static final String EscapeRegex = "^([^\"\\\\]*(\\\\.)?)*$";
+public class CordovaMFPRequest extends CordovaPlugin {
+    private static final String TAG = "NATIVE-MFPRequest";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if("send".equals(action)) {
             this.send(args, callbackContext);
             return true;
-        } else if ("sendFormParameters".equals(action)) {
-            this.sendFormParameters(args, callbackContext);
-            return true;
         }
         return false;
     }
 
-    //TODO: Refactor send & sendFormParameters
     public void send(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         JSONObject myrequest = args.getJSONObject(0);
         Log.d(TAG, "myrequest.toString() = " + myrequest.toString());
+        final Context currentContext = this.cordova.getActivity().getApplicationContext();
+
         try {
-            final MFPRequest nativeRequest = unpackRequest(myrequest);
-            final String bodyText = (myrequest.getString("body") != null) ? myrequest.getString("body") : "";
+            final Request nativeRequest = unpackRequest(myrequest);
+            final String bodyText = (myrequest.has("body") && !myrequest.isNull("body")) ? myrequest.getString("body") : "";
             printNativeRequest(nativeRequest);
+
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
-                    nativeRequest.send(bodyText, new ResponseListener() {
+
+                    nativeRequest.send(currentContext, bodyText, new ResponseListener() {
                         @Override
                         public void onSuccess(Response response) {
                             try {
@@ -63,7 +62,7 @@ public class MFPResourceRequest extends CordovaPlugin {
                             } catch (JSONException e) { e.printStackTrace(); }
                         }
                         @Override
-                        public void onFailure(FailResponse failResponse, Throwable throwable) {
+                        public void onFailure(Response failResponse, Throwable t, JSONObject extendedInfo) {
                             try {
                                 PluginResult result = new PluginResult(PluginResult.Status.ERROR, packResponse(failResponse));
                                 result.setKeepCallback(true);
@@ -72,97 +71,57 @@ public class MFPResourceRequest extends CordovaPlugin {
                             } catch (JSONException e) { e.printStackTrace(); }
                         }
                     });
+
                 }
             });
         }
         catch (MalformedURLException e) { Log.d(TAG, "Malformed URL Exception"); e.printStackTrace(); }
     }
 
-    //TODO: Refactor
-    public void sendFormParameters(JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        JSONObject myrequest = args.getJSONObject(0);
-        Log.d(TAG, "myrequest.toString() = " + myrequest.toString());
-        try {
-            final MFPRequest nativeRequest = unpackRequest(myrequest);
-            final Map<String, String> formParameters = fromJSONtoHashMap(myrequest.getJSONObject("body"));
-            Log.d(TAG, "BODY " + myrequest.getJSONObject("body").toString());
-            printNativeRequest(nativeRequest);
-
-            cordova.getThreadPool().execute(new Runnable() {
-                public void run() {
-                    nativeRequest.send(formParameters, new ResponseListener() {
-                        @Override
-                        public void onSuccess(Response response) {
-                            Log.d(TAG, "Success: " + response.getResponseText());
-                            //callbackContext.success("Native Success");
-                            try {
-                                PluginResult result = new PluginResult(PluginResult.Status.OK, packResponse(response));
-                                result.setKeepCallback(true);
-                                callbackContext.sendPluginResult(result);
-                            } catch (JSONException e) { e.printStackTrace(); }
-                        }
-                        @Override
-                        public void onFailure(FailResponse failResponse, Throwable throwable) {
-                            Log.d(TAG, "Failure: " + failResponse.getStatus());
-                            //callbackContext.error("Native Error.");
-                            try {
-                                PluginResult result = new PluginResult(PluginResult.Status.ERROR, packResponse(failResponse));
-                                result.setKeepCallback(true);
-                                callbackContext.sendPluginResult(result);
-                            } catch (JSONException e) { e.printStackTrace(); }
-                        }
-                    });
-                }
-            });
-        }
-        catch (MalformedURLException e) { Log.d(TAG, "Malformed URL Exception"); e.printStackTrace(); }
-    }
-
-
-    //TODO : Refactor
-    private MFPRequest unpackRequest(JSONObject jsRequest) throws JSONException {
-        //Parse the request from Javascript
+    private Request unpackRequest(JSONObject jsRequest) throws JSONException {
+        //Parse request from Javascript
         String url    = jsRequest.getString("url");
         String method = jsRequest.getString("method");
         int timeout   = jsRequest.getInt("timeout");
         Map<String, List<String>> headers = null;
         Map<String, String> queryParameters = null;
 
-        if (jsRequest.getJSONObject("headers") != null)
+        if (jsRequest.has("headers") && !jsRequest.isNull("headers")) {
             headers = fromJSONtoHashMap(jsRequest.getJSONObject("headers"));
-        if (jsRequest.getJSONObject("queryParameters") != null)
+        }
+        if (jsRequest.has("queryParameters") && !jsRequest.isNull("queryParameters")){
             queryParameters = fromJSONtoHashMap(jsRequest.getJSONObject("queryParameters"));
+        }
 
-        //Build the request using the native Android SDK
-        MFPRequest nativeRequest = null;
-        try {
-            nativeRequest = new MFPRequest(url, method);
-            nativeRequest.setTimeout(timeout);
-            if (headers != null)
-                nativeRequest.setHeaders(headers);
-            if (queryParameters != null)
-                nativeRequest.setQueryParameters(queryParameters);
-        } catch (MalformedURLException e) { e.printStackTrace(); }
+        //Build request using the native Android SDK
+        Request nativeRequest = null;
+        nativeRequest = new Request(url, method, timeout);
+        if (headers != null){
+            nativeRequest.setHeaders(headers);
+        }
+        if (queryParameters != null) {
+            nativeRequest.setQueryParameters(queryParameters);
+        }
         return nativeRequest;
     }
 
     private String packResponse(Response response) throws JSONException {
         JSONObject jsonResponse = new JSONObject();
 
-        int httpStatus             = (response.getStatus() != 0)             ? response.getStatus() : 0;
-        String responseText        = (response.getResponseText() != null)    ? response.getResponseText() : "";
-        JSONObject responseJSON    = (response.getResponseJSON() != null)    ? response.getResponseJSON() : null;
-        JSONObject responseHeaders = (response.getResponseHeaders() != null) ? fromHashMaptoJSON(response.getResponseHeaders()) : null;
+        int status                 = (response.getStatus() != 0)          ? response.getStatus() : 0;
+        String responseText        = (response.getResponseText() != null) ? response.getResponseText() : "";
+        JSONObject responseHeaders = (response.getHeaders() != null)      ? fromHashMaptoJSON(response.getHeaders()) : null;
         
-        jsonResponse.put("httpStatus", httpStatus);
+        //TODO: Resolve errorCode & description
+        int errorCode = 0;
+        String errorDescription = "";
+
+        jsonResponse.put("status", status);
         jsonResponse.put("responseText", responseText);
-        jsonResponse.put("responseJSON", responseJSON);
         jsonResponse.put("responseHeaders", responseHeaders);
 
-        if(response instanceof FailResponse) {
-            jsonResponse.put("errorCode", ((FailResponse) response).getErrorCode());
-            jsonResponse.put("errorDescription", responseText);
-        }
+        jsonResponse.put("errorCode", errorCode);
+        jsonResponse.put("errorDescription", errorDescription);
 
         Log.d(TAG, "packResponse -> Complete JSON");
         Log.d(TAG, jsonResponse.toString());
@@ -170,6 +129,12 @@ public class MFPResourceRequest extends CordovaPlugin {
         return jsonResponse.toString();
     }
 
+    /**
+     *
+     *
+     *
+     *
+     */
     private static JSONObject fromHashMaptoJSON(Map<String, List<String>> originalMap) throws JSONException {
         JSONObject convertedJSON = new JSONObject();
         Iterator it = originalMap.entrySet().iterator();
@@ -183,6 +148,7 @@ public class MFPResourceRequest extends CordovaPlugin {
         }
         return convertedJSON;
     }
+
     private static Map fromJSONtoHashMap(JSONObject originalJSON) throws JSONException {
         Map<String, Object> convertedMap = new HashMap<String, Object>();
 
@@ -207,7 +173,7 @@ public class MFPResourceRequest extends CordovaPlugin {
         return convertedMap;
     }
 
-    private void printNativeRequest(MFPRequest theRequest) throws MalformedURLException {
+    private void printNativeRequest(Request theRequest) throws MalformedURLException {
         Log.d(TAG, "\n[START] printNativeRequest()");
         Log.d(TAG, "URL = \t" + theRequest.getUrl());
         Log.d(TAG, "Method = \t" + theRequest.getMethod());

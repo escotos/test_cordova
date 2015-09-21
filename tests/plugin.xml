@@ -10,7 +10,7 @@
     <js-module src="tests.js" name="tests">
     </js-module>
 
-    <platform name="android">
+<!--     <platform name="android">
     	<source-file src="src/android/TestMFPResourceRequest.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core/test" />
         <config-file target="AndroidManifest.xml" parent="/*/application">
             <provider
@@ -18,5 +18,5 @@
                 android:authorities="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.testprovider"
                 android:exported="false" />
         </config-file>
-    </platform>
+    </platform> -->
 </plugin>

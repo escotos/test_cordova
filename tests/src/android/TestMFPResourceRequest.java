@@ -1,11 +1,11 @@
 package com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.test;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+// import static org.junit.Assert.assertEquals;
+// import org.junit.Test;
 
 public class TestMFPResourceRequest {
 
-	@Test
+	// @Test
 	public void testUnpackRequest() {
 		
 	}

@@ -21,17 +21,17 @@
 
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="MFPClient">
-                <param name="android-package" value="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.MFPClient"/>
+                <param name="android-package" value="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.CordovaBMSClient"/>
             </feature>
             <feature name="MFPResourceRequest">
-                <param name="android-package" value="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.MFPResourceRequest"/>
+                <param name="android-package" value="com.ibm.mobilefirstplatform.clientsdk.cordovaplugins.core.CordovaMFPRequest"/>
             </feature>
         </config-file>
 
         <config-file parent="/*" target="AndroidManifest.xml"/>
 
-        <source-file src="src/android/MFPClient.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
-        <source-file src="src/android/MFPResourceRequest.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
+        <source-file src="src/android/CordovaBMSClient.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
+        <source-file src="src/android/CordovaMFPRequest.java" target-dir="src/com/ibm/mobilefirstplatform/clientsdk/cordovaplugins/core" />
     </platform>
 
     <!-- ios -->

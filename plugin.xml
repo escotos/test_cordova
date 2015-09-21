@@ -3,12 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
     <name>MFPCore</name>
 
-    <js-module name="MFPClient" src="www/MFPClient.js">
-        <clobbers target="MFPClient"/>
+    <js-module name="BMSClient" src="www/BMSClient.js">
+        <clobbers target="BMSClient"/>
     </js-module>
 
-    <js-module name="MFPResourceRequest" src="www/MFPResourceRequest.js">
-        <clobbers target="MFPResourceRequest"/>
+    <js-module name="MFPRequest" src="www/MFPRequest.js">
+        <clobbers target="MFPRequest"/>
     </js-module>
 
     <platform name="android">

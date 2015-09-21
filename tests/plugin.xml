@@ -7,8 +7,6 @@
     <name>IBM Bluemix Cordova Plugin Tests</name>
     <license>Apache 2.0</license>
 
-    <dependency id="cordova-plugin-test-framework" url="http://git-wip-us.apache.org/repos/asf/cordova-plugin-test-framework" />
-
     <js-module src="tests.js" name="tests">
     </js-module>
 

@@ -35,7 +35,6 @@ import IMFCore
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAsString: responseString)
                 self.commandDelegate!.sendPluginResult(pluginResult, callbackId:command.callbackId)
             }
-
         }
     }
     
@@ -70,7 +69,6 @@ import IMFCore
         for name in requestHeaderNamesArray {
             nativeRequest.setValue(requestHeaderDict[ name ]!, forHTTPHeaderField: name)
         }
-        
         return nativeRequest
     }
     

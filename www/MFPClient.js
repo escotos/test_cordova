@@ -16,7 +16,6 @@ var MFPClient = function() {
     this._backendRoute = "";
     this._backendGuid = "";
     this._challengeHandlers = {};
-    this._version = "0.0.1";
 
     var success = function(msg) { console.log("MFPClient success: " + msg) };
 
@@ -41,7 +40,7 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
     this.registerAuthenticationListener = function(realm, authenticationListener) {
-        cordova.exec(success, failure, "MFPClient", "registerAuthenticationListener" [realm, authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "registerAuthenticationListener", [realm, authenticationListener]);
     };
 
     /**
@@ -49,15 +48,23 @@ var MFPClient = function() {
      * @param {function} authenticationListener
      */
 	this.unregisterAuthenticationListener = function(authenticationListener) {
-        cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener" [authenticationListener]);
+        cordova.exec(success, failure, "MFPClient", "unregisterAuthenticationListener", [authenticationListener]);
     };
 
     /**
-     * Prints out the plugin version
-     * @returns {string}
+     *
+     * @param callback
      */
-	this.version = function() {
-        return this._version;
+    this.getBluemixAppRoute = function(callback) {
+        cordova.exec(callback, callback, "MFPClient", "backendRoute", []);
+    };
+
+    /**
+     *
+     * @param callback
+     */
+    this.getBluemixAppGUID = function(callback) {
+        cordova.exec(callback, callback, "MFPClient", "backendGUID", []);
     };
 };
 

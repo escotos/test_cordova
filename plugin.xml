@@ -53,14 +53,10 @@
 
         </config-file>
 
-        <header-file src="src/ios/MFPCore.h" />
-        <source-file src="src/ios/MFPCore.m"/>
-
-        <header-file src="src/ios/MFPClient.h" />
-        <source-file src="src/ios/MFPClient.m" />
-
-        <header-file src="src/ios/MFPResourceRequest.h" />
-        <source-file src="src/ios/MFPResourceRequest.m" />
+        <header-file src="src/ios/Bridging-Header.h" />
+        <source-file src="src/ios/MFPCore.swift" />
+        <source-file src="src/ios/MFPClient.swift" />
+        <source-file src="src/ios/MFPResourceRequest.swift" />
 
     </platform>
 
